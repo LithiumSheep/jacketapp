@@ -15,7 +15,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.lithiumsheep.jacketapp.api.WeatherApi;
 import com.lithiumsheep.jacketapp.api.WeatherHttpClient;
-import com.mikepenz.materialize.MaterializeBuilder;
 
 import java.io.IOException;
 
@@ -42,14 +41,6 @@ public class MainActivity extends AppCompatActivity implements
         //materialize();
 
         setupGoogleApis();
-    }
-
-    private void materialize() {
-        new MaterializeBuilder()
-                .withActivity(this)
-                .withFullscreen(true)
-                .withTranslucentStatusBarProgrammatically(true)
-                .withTintedStatusBar(false).build();
     }
 
     private void setupGoogleApis() {
