@@ -2,7 +2,7 @@
 *.apk
 *.ap_
 
-# Files for the ART/Dalvik VM
+# Files for the Dalvik VM
 *.dex
 
 # Java class files
@@ -29,12 +29,15 @@ proguard/
 # Android Studio Navigation editor temp files
 .navigation/
 
+# User configurations
+.idea/*
+
 # Android Studio captures folder
 captures/
 
 # Intellij
 *.iml
-.idea/workspace.xml
 
 # Keystore files
 *.jks
+rename_tag.sh
