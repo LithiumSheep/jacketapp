@@ -1,6 +1,7 @@
 package com.lithiumsheep.jacketapp;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
@@ -20,6 +21,7 @@ import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -38,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        //materialize();
 
         setupGoogleApis();
     }
@@ -51,6 +52,11 @@ public class MainActivity extends AppCompatActivity implements
                     .addApi(LocationServices.API)
                     .build();
         }
+    }
+
+    @OnClick(R.id.button)
+    void clicked() {
+        startActivity(new Intent(this, SplashActivity.class));
     }
 
     @Override
@@ -94,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
-            Timber.d("A permission was not granted");
+            Timber.d("COARSE_LOCATION permission not granted");
             return;
         }
         Location loc = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);

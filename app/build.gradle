@@ -45,7 +45,6 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.6.0'
     compile 'com.github.ihsanbal:LoggingInterceptor:1.0.4'
 
-    compile('com.mikepenz:materialdrawer:5.8.2@aar') { transitive = true }
-    compile "com.mikepenz:materialize:1.0.1@aar"
     compile 'com.github.AhmadNemati:WindView:1.1.1'
+    compile 'com.github.arimorty:floatingsearchview:2.0.3'
 }
