@@ -16,19 +16,18 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.lithiumsheep.jacketapp.api.WeatherApi;
 import com.lithiumsheep.jacketapp.api.WeatherHttpClient;
+import com.lithiumsheep.jacketapp.util.StorageUtil;
 
-import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
 import timber.log.Timber;
 
-public class MainActivity extends AppCompatActivity implements
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     @BindView(R.id.loc_text)
     TextView locText;
@@ -41,7 +40,15 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        loadInitialSet();
         setupGoogleApis();
+    }
+
+    private void loadInitialSet() {
+        String lastLocation = StorageUtil.getLastLocation(this);
+        if (!lastLocation.isEmpty()) {
+            locText.setText("Last Known Location: \n" + lastLocation);
+        }
     }
 
     private void setupGoogleApis() {
@@ -54,9 +61,53 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Timber.d("GoogleApi connection suspended");
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Timber.d("GoogleAPi connection failed");
+    }
+
+
     @OnClick(R.id.button)
+    void openSearchActivity() {
+        //startActivity(new Intent(this, SplashActivity.class));
+        StorageUtil.clearLocations(this);
+    }
+
+    @OnClick(R.id.button2)
     void clicked() {
-        startActivity(new Intent(this, SplashActivity.class));
+        getLocation();
+    }
+
+    private void getLocation() {
+        Timber.d("GET THE DAM LOCATION");
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            Timber.d("Coarse Location is not granted so request it");
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1337);
+        } else {
+            Timber.d("Permission was granted");
+            Location loc = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            if (loc != null) {
+                Timber.d("Lat %s ; Lon %s", loc.getLatitude(), loc.getLongitude());
+                StorageUtil.storeLastLocation(this, loc);
+                locText.setText(locText.getText() + "\nLat " + loc.getLatitude() + " ; Lon " + loc.getLongitude());
+            }
+        }
     }
 
     @Override
@@ -72,63 +123,15 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        Timber.d("Google Apis Connected!");
-        processLocation();
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        Timber.d("Connection Suspended");
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Timber.d("Connection Failed");
-    }
-
-    private void requestLocationPermission() {
-
-    }
-
-    private void processLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            Timber.d("COARSE_LOCATION permission not granted");
-            return;
-        }
-        Location loc = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        if (loc != null) {
-            locText.setText("long: " + loc.getLongitude() + " lat: " + loc.getLatitude());
-
-            WeatherHttpClient.get(WeatherApi.weatherCoord(loc), new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-
-                }
-
-                @Override
-                public void onResponse(Call call, final Response response) throws IOException {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                locText.setText(response.body().string());
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-                }
-            });
-        } else {
-            locText.setText("loc was null?");
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1337) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getLocation();
+            } else {
+                Timber.d("Location requested and user denied");
+            }
         }
     }
+
 }

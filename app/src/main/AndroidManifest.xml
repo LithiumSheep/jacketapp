@@ -19,7 +19,6 @@
 
         <activity android:name=".MainActivity"
             android:theme="@style/AppTheme.Transparent">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -29,7 +28,6 @@
         <activity android:name=".SplashActivity"
             android:theme="@style/AppTheme.Transparent"
             />
-
 
     </application>
 
