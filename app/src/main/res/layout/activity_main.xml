@@ -10,7 +10,7 @@
         android:id="@+id/loc_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Test input"
+        android:text="Last loc unknown"
         android:padding="16dp"
         app:layout_editor_absoluteX="0dp"
         app:layout_editor_absoluteY="56dp" />
@@ -19,7 +19,7 @@
         android:id="@+id/button"
         android:layout_width="0dp"
         android:layout_height="48dp"
-        android:text="Go To SearchView"
+        android:text="Clear last location"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
