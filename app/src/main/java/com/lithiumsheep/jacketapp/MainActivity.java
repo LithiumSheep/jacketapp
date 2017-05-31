@@ -1,7 +1,6 @@
 package com.lithiumsheep.jacketapp;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -11,9 +10,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.arlib.floatingsearchview.FloatingSearchView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -22,9 +25,8 @@ import com.lithiumsheep.jacketapp.api.WeatherHttpClient;
 import com.lithiumsheep.jacketapp.util.StorageUtil;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,6 +36,8 @@ import timber.log.Timber;
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
+    @BindView(R.id.floating_search_view)
+    FloatingSearchView searchView;
     @BindView(R.id.loc_text)
     TextView locText;
 
@@ -47,6 +51,27 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         loadInitialSet();
         setupGoogleApis();
+
+        searchView.setOnMenuItemClickListener(new FloatingSearchView.OnMenuItemClickListener() {
+            @Override
+            public void onActionMenuItemSelected(MenuItem item) {
+                if (item.getItemId() == R.id.action_location) {
+                    // check if last location exists on disk, if yes ask to continue
+                    getLocation();
+                }
+            }
+        });
+
+        searchView.setOnQueryChangeListener(new FloatingSearchView.OnQueryChangeListener() {
+            @Override
+            public void onSearchTextChanged(String oldQuery, String newQuery) {
+                Timber.d("%s changed to %s", oldQuery, newQuery);
+                Suggestion s = new Suggestion(newQuery);
+                List<Suggestion> list = new ArrayList<>();
+                list.add(s);
+                searchView.swapSuggestions(list);
+            }
+        });
     }
 
     private void loadInitialSet() {
@@ -81,16 +106,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         Timber.d("GoogleAPi connection failed");
     }
 
-
-    @OnClick(R.id.button)
-    void openSearchActivity() {
-        //startActivity(new Intent(this, SplashActivity.class));
-        StorageUtil.clearLocations(this);
-    }
-
     @OnClick(R.id.button2)
     void clicked() {
         getLocation();
+    }
+
+    @OnClick(R.id.button)
+    void openSearchActivity() {
+        //StorageUtil.clearAll(this);
+        confirmZipCode("22102");
     }
 
     private void getLocation() {
@@ -113,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 StorageUtil.storeLastLocation(this, loc);
                 locText.setText(locText.getText() + "\nLat " + loc.getLatitude() + " ; Lon " + loc.getLongitude());
 
-                //geoCodeToAddress(loc);
+                geoCodeToAddress(loc);
             } else {
                 Timber.e("Location was null, wonder why");
             }
@@ -122,13 +146,43 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     private void geoCodeToAddress(Location loc) {
         try {
-            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-            Address address = geocoder.getFromLocation(loc.getLatitude(), loc.getLongitude(), 1).get(0);
-            Timber.d("Location corresponds to zip code " + address.getPostalCode());
-            Toast.makeText(this, address.getPostalCode(), Toast.LENGTH_SHORT).show();
+            Geocoder geocoder = new Geocoder(this);
+            List<Address> addresses = geocoder.getFromLocation(loc.getLatitude(), loc.getLongitude(), 5);
+            for (Address address : addresses) {
+                if (address.getPostalCode() != null) {
+                    Timber.d("First valid zip is " + address.getPostalCode());
+                    StorageUtil.storeLastZip(this, address.getPostalCode());
+                    break;
+                }
+            }
+
+            if (StorageUtil.getLastLocation(this) == null) {
+                Timber.d("SOMETHING IS HORRIBLY WRONG");
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void confirmZipCode(String zip) {
+        new MaterialDialog.Builder(this)
+                .title("Is this your zip code?")
+                .content(zip)
+                .positiveText("Yeah")
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction) {
+
+                    }
+                })
+                .negativeText("Nope")
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction) {
+                        Timber.d("FUUUUUUU");
+                    }
+                })
+                .build().show();
     }
 
     @Override

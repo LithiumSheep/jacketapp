@@ -9,8 +9,9 @@ import timber.log.Timber;
 public class StorageUtil {
 
     private static final String LOCATIONS_FILE = "LOCATIONS_FILE";
-    private static final String LOCATION_SET = "LOCATION_SET";
+    //private static final String LOCATION_SET = "LOCATION_SET";
     private static final String LOCATION_LAST = "LOCATION_LAST";
+    private static final String ZIP_LAST = "ZIP_LAST";
 
     /*public static void storeLastLocation(Context context, Location lastLoc) {
         SharedPreferences pref = context.getSharedPreferences(LOCATIONS_FILE, Context.MODE_PRIVATE);
@@ -42,10 +43,22 @@ public class StorageUtil {
 
     public static String getLastLocation(Context context) {
         SharedPreferences pref = context.getSharedPreferences(LOCATIONS_FILE, Context.MODE_PRIVATE);
-        return pref.getString(LOCATION_LAST, "");
+        return pref.getString(ZIP_LAST, "");
     }
 
-    public static void clearLocations(Context context) {
+    public static void storeLastZip(Context context, String zipCode) {
+        SharedPreferences pref = context.getSharedPreferences(LOCATIONS_FILE, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+
+        editor.putString(ZIP_LAST, zipCode).apply();
+    }
+
+    public static String getLastZip(Context context) {
+        SharedPreferences pref = context.getSharedPreferences(LOCATIONS_FILE, Context.MODE_PRIVATE);
+        return pref.getString(ZIP_LAST, "");
+    }
+
+    public static void clearAll(Context context) {
         SharedPreferences pref = context.getSharedPreferences(LOCATIONS_FILE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
 
