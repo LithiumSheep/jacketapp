@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_alternate);
         ButterKnife.bind(this);
 
         loadInitialSet();
@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
+        Timber.d("GoogleApi connection OKAY");
     }
 
     @Override
@@ -113,6 +114,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 locText.setText(locText.getText() + "\nLat " + loc.getLatitude() + " ; Lon " + loc.getLongitude());
 
                 //geoCodeToAddress(loc);
+            } else {
+                Timber.e("Location was null, wonder why");
             }
         }
     }
