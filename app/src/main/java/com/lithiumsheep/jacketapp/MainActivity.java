@@ -1,31 +1,30 @@
 package com.lithiumsheep.jacketapp;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.arlib.floatingsearchview.FloatingSearchView;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.lithiumsheep.jacketapp.api.WeatherApi;
 import com.lithiumsheep.jacketapp.api.WeatherHttpClient;
 import com.lithiumsheep.jacketapp.util.StorageUtil;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -33,15 +32,16 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import timber.log.Timber;
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity {
+
+    private static final int LEET_LOCATION_REQUEST_CODE = 1337;
 
     @BindView(R.id.floating_search_view)
     FloatingSearchView searchView;
     @BindView(R.id.loc_text)
     TextView locText;
 
-    private GoogleApiClient mGoogleApiClient;
+    private FusedLocationProviderClient mFusedLocationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,14 +50,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         ButterKnife.bind(this);
 
         loadInitialSet();
-        setupGoogleApis();
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         searchView.setOnMenuItemClickListener(new FloatingSearchView.OnMenuItemClickListener() {
             @Override
             public void onActionMenuItemSelected(MenuItem item) {
                 if (item.getItemId() == R.id.action_location) {
                     // check if last location exists on disk, if yes ask to continue
-                    getLocation();
+                    getLastLocation();
                 }
             }
         });
@@ -66,82 +66,62 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             @Override
             public void onSearchTextChanged(String oldQuery, String newQuery) {
                 Timber.d("%s changed to %s", oldQuery, newQuery);
-                Suggestion s = new Suggestion(newQuery);
+                /*Suggestion s = new Suggestion(newQuery);
                 List<Suggestion> list = new ArrayList<>();
                 list.add(s);
-                searchView.swapSuggestions(list);
+                searchView.swapSuggestions(list);*/
             }
         });
     }
 
     private void loadInitialSet() {
-        String lastLocation = StorageUtil.getLastLocation(this);
-        if (!lastLocation.isEmpty()) {
-            locText.setText("Last Known Location: \n" + lastLocation);
+        Location lastLocation = StorageUtil.getLastLocation(this);
+        if (lastLocation != null) {
+            locText.setText("Last Known Location: \nLat " + lastLocation.getLatitude() + " ; Lon " + lastLocation.getLongitude());
         }
-    }
-
-    private void setupGoogleApis() {
-        if (mGoogleApiClient == null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(this)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .build();
-        }
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        Timber.d("GoogleApi connection OKAY");
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        Timber.d("GoogleApi connection suspended");
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Timber.d("GoogleAPi connection failed");
     }
 
     @OnClick(R.id.button2)
     void clicked() {
-        getLocation();
+        getLastLocation();
     }
 
     @OnClick(R.id.button)
     void openSearchActivity() {
         //StorageUtil.clearAll(this);
-        confirmZipCode("22102");
+        //confirmZipCode("22102");
     }
 
-    private void getLocation() {
-        Timber.d("GET THE DAM LOCATION");
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            Timber.d("Coarse Location is not granted so request it");
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1337);
+    private void getLastLocation() {
+        if (!checkPermissions()) {
+            requestPermissions();
         } else {
-            Timber.d("Permission is granted");
-            Location loc = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-            if (loc != null) {
-                Timber.d("Lat %s ; Lon %s", loc.getLatitude(), loc.getLongitude());
-                StorageUtil.storeLastLocation(this, loc);
-                locText.setText(locText.getText() + "\nLat " + loc.getLatitude() + " ; Lon " + loc.getLongitude());
-
-                geoCodeToAddress(loc);
-            } else {
-                Timber.e("Location was null, wonder why");
-            }
+            performLocationRequest();
         }
+    }
+
+    @SuppressLint("MissingPermission")
+    private void performLocationRequest() {
+        Timber.d("Requesting Last Location...");
+
+        mFusedLocationClient.getLastLocation()
+                .addOnCompleteListener(this, new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        if (task.isSuccessful() && task.getResult() != null) {
+                            Location loc = task.getResult();
+
+                            Timber.d("Location request came back with lat %s lon %s", loc.getLatitude(), loc.getLongitude());
+                            StorageUtil.storeLastLocation(MainActivity.this, loc);
+
+                            locText.setText(locText.getText() + "\nLat " + loc.getLatitude() + " ; Lon " + loc.getLongitude());
+
+                            //geoCodeToAddress(loc);
+                        } else {
+                            Timber.w("getLastLocation Exception", task.getException());
+                        }
+                    }
+                });
     }
 
     private void geoCodeToAddress(Location loc) {
@@ -187,26 +167,37 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     @Override
     protected void onStart() {
-        mGoogleApiClient.connect();
         super.onStart();
     }
 
     @Override
     protected void onStop() {
-        mGoogleApiClient.disconnect();
         super.onStop();
     }
 
+    private boolean checkPermissions() {
+        int permissionState = ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION);
+        return permissionState == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestPermissions() {
+        Timber.d("Requesting location permissions...");
+        ActivityCompat.requestPermissions(MainActivity.this,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LEET_LOCATION_REQUEST_CODE);
+    }
+
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 1337) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                getLocation();
+        if (requestCode == LEET_LOCATION_REQUEST_CODE) {
+            if (grantResults.length <= 0) {
+                Timber.w("Location request was interrupted (by user?)");
+            } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getLastLocation();
             } else {
-                Timber.d("Location requested and user denied");
+                Timber.d("Location requested denied by user");
             }
         }
     }
-
 }

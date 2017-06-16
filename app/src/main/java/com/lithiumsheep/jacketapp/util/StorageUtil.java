@@ -11,6 +11,8 @@ public class StorageUtil {
     private static final String LOCATIONS_FILE = "LOCATIONS_FILE";
     //private static final String LOCATION_SET = "LOCATION_SET";
     private static final String LOCATION_LAST = "LOCATION_LAST";
+    private static final String LOCATION_LAST_LAT = "LOCATION_LAST_LAT";
+    private static final String LOCATION_LAST_LON = "LOCATION_LAST_LON";
     private static final String ZIP_LAST = "ZIP_LAST";
 
     /*public static void storeLastLocation(Context context, Location lastLoc) {
@@ -36,14 +38,22 @@ public class StorageUtil {
         SharedPreferences pref = context.getSharedPreferences(LOCATIONS_FILE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
 
-        String lls = "Lat " + lastLoc.getLatitude() + " ; Lon " + lastLoc.getLongitude();
-        Timber.d("Storing location %s", lls);
-        editor.putString(LOCATION_LAST, lls).apply();
+        editor.putString(LOCATION_LAST_LAT, String.valueOf(lastLoc.getLatitude())).apply();
+        editor.putString(LOCATION_LAST_LON, String.valueOf(lastLoc.getLongitude())).apply();
     }
 
-    public static String getLastLocation(Context context) {
+    public static Location getLastLocation(Context context) {
         SharedPreferences pref = context.getSharedPreferences(LOCATIONS_FILE, Context.MODE_PRIVATE);
-        return pref.getString(ZIP_LAST, "");
+
+        if (pref.getString(LOCATION_LAST_LAT, "").isEmpty() || pref.getString(LOCATION_LAST_LON, "").isEmpty()) {
+            return null;
+        }
+
+        Location lastLoc = new Location("JacketApp");
+        lastLoc.setLatitude(Double.parseDouble(pref.getString(LOCATION_LAST_LAT, null)));
+        lastLoc.setLongitude(Double.parseDouble(pref.getString(LOCATION_LAST_LON, null)));
+
+        return lastLoc;
     }
 
     public static void storeLastZip(Context context, String zipCode) {
