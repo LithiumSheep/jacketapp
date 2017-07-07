@@ -1,19 +1,17 @@
 package com.lithiumsheep.weatherwrapperwhuut;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.lithiumsheep.weatherwrapperwhuut.util.LocationCache;
 
 import java.io.IOException;
 import java.util.List;
@@ -29,10 +27,13 @@ public class WeatherWrapper {
     private static Geocoder geocoder;
     private static int defaultGeocoderMaxResults = 5;
 
-    public static void initialize(Context context) {
+    private static LocationCache locationCache;
+
+    public static void initialize(Context context, LocationCache.CachePolicy policy) {
         Timber.plant(new Timber.DebugTree());
 
         geocoder = new Geocoder(context);
+        locationCache = new LocationCache(context, policy);
     }
 
     public static void setGeocoderMaxResults(int maxNumberOfResults) {
@@ -55,6 +56,9 @@ public class WeatherWrapper {
 
     @SuppressLint("MissingPermission")  //TODO: Also wrap the location permission
     public static void getLastLocation(Context context, final LocationCallback locationCallback) {
+        // check cache and freshness
+        // if fresh, return that
+
         FusedLocationProviderClient fusedLocationClient =
                 LocationServices.getFusedLocationProviderClient(context);
 
@@ -64,8 +68,7 @@ public class WeatherWrapper {
                     public void onComplete(@NonNull Task<Location> task) {
                         if (task.isSuccessful() && task.getResult() != null) {
 
-                            // TODO: Cache last location (cache expiry?)
-
+                            locationCache.storeLastLocation(task.getResult()); // TODO: Cache last location (cache expiry?)
                             locationCallback.onLocationSuccess(task.getResult());
                         } else {
                             locationCallback.onError(task.getException());

@@ -109,15 +109,15 @@ public class MainActivity extends AppCompatActivity {
             public void onLocationSuccess(Location location) {
                 //Timber.d("Location request came back with lat %s lon %s", location.getLatitude(), location.getLongitude());
                 locText.setText(locText.getText() + "\nLat " + location.getLatitude() + " ; Lon " + location.getLongitude());
-                geoCodeToAddress(location);
+                //geoCodeToAddress(location);
             }
         });
     }
 
     private void geoCodeToAddress(Location loc) {
-        if (StorageUtil.getLastLocation(MainActivity.this) == null) {
-            Timber.w("SOMETHING IS HORRIBLY WRONG");
-        }
+//        if (StorageUtil.getLastLocation(MainActivity.this) == null) {
+//            Timber.w("SOMETHING IS HORRIBLY WRONG");
+//        }
         WeatherWrapper.getAddressForLoc(loc, new GeocodeCallback() {
             @Override
             public void onError(IOException exception) {
