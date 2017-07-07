@@ -4,7 +4,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -16,13 +15,12 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.arlib.floatingsearchview.FloatingSearchView;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.lithiumsheep.jacketapp.api.WeatherApi;
 import com.lithiumsheep.jacketapp.api.WeatherHttpClient;
 import com.lithiumsheep.jacketapp.util.StorageUtil;
+import com.lithiumsheep.weatherwrapperwhuut.GeocodeCallback;
+import com.lithiumsheep.weatherwrapperwhuut.LocationCallback;
+import com.lithiumsheep.weatherwrapperwhuut.WeatherWrapper;
 
 import java.io.IOException;
 import java.util.List;
@@ -41,8 +39,6 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.loc_text)
     TextView locText;
 
-    private FusedLocationProviderClient mFusedLocationClient;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         loadInitialSet();
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         searchView.setOnMenuItemClickListener(new FloatingSearchView.OnMenuItemClickListener() {
             @Override
@@ -104,44 +99,42 @@ public class MainActivity extends AppCompatActivity {
     private void performLocationRequest() {
         Timber.d("Requesting Last Location...");
 
-        mFusedLocationClient.getLastLocation()
-                .addOnCompleteListener(this, new OnCompleteListener<Location>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Location> task) {
-                        if (task.isSuccessful() && task.getResult() != null) {
-                            Location loc = task.getResult();
+        WeatherWrapper.getLastLocation(this, new LocationCallback() {
+            @Override
+            public void onError(Exception exception) {
+                Timber.e(exception);
+            }
 
-                            Timber.d("Location request came back with lat %s lon %s", loc.getLatitude(), loc.getLongitude());
-                            StorageUtil.storeLastLocation(MainActivity.this, loc);
-
-                            locText.setText(locText.getText() + "\nLat " + loc.getLatitude() + " ; Lon " + loc.getLongitude());
-
-                            //geoCodeToAddress(loc);
-                        } else {
-                            Timber.w("getLastLocation Exception", task.getException());
-                        }
-                    }
-                });
+            @Override
+            public void onLocationSuccess(Location location) {
+                //Timber.d("Location request came back with lat %s lon %s", location.getLatitude(), location.getLongitude());
+                locText.setText(locText.getText() + "\nLat " + location.getLatitude() + " ; Lon " + location.getLongitude());
+                geoCodeToAddress(location);
+            }
+        });
     }
 
     private void geoCodeToAddress(Location loc) {
-        try {
-            Geocoder geocoder = new Geocoder(this);
-            List<Address> addresses = geocoder.getFromLocation(loc.getLatitude(), loc.getLongitude(), 5);
-            for (Address address : addresses) {
-                if (address.getPostalCode() != null) {
-                    Timber.d("First valid zip is " + address.getPostalCode());
-                    StorageUtil.storeLastZip(this, address.getPostalCode());
-                    break;
-                }
+        if (StorageUtil.getLastLocation(MainActivity.this) == null) {
+            Timber.w("SOMETHING IS HORRIBLY WRONG");
+        }
+        WeatherWrapper.getAddressForLoc(loc, new GeocodeCallback() {
+            @Override
+            public void onError(IOException exception) {
+                Timber.e(exception);
             }
 
-            if (StorageUtil.getLastLocation(this) == null) {
-                Timber.d("SOMETHING IS HORRIBLY WRONG");
+            @Override
+            public void onSuccess(List<Address> addresses) {
+                for (Address address : addresses) {
+                    if (address.getPostalCode() != null) {
+                        Timber.d("First valid zip is " + address.getPostalCode());
+                        StorageUtil.storeLastZip(MainActivity.this, address.getPostalCode());
+                        break;
+                    }
+                }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        });
     }
 
     private void confirmZipCode(String zip) {

@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
+import com.lithiumsheep.jacketapp.models.Suggestion;
 
 import java.util.ArrayList;
 import java.util.List;
