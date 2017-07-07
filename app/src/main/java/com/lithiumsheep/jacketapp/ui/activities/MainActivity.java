@@ -1,4 +1,4 @@
-package com.lithiumsheep.jacketapp;
+package com.lithiumsheep.jacketapp.ui.activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.arlib.floatingsearchview.FloatingSearchView;
+import com.lithiumsheep.jacketapp.R;
 import com.lithiumsheep.jacketapp.api.WeatherApi;
 import com.lithiumsheep.jacketapp.api.WeatherHttpClient;
 import com.lithiumsheep.jacketapp.util.StorageUtil;

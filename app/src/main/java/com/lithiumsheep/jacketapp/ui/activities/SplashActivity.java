@@ -1,10 +1,11 @@
-package com.lithiumsheep.jacketapp;
+package com.lithiumsheep.jacketapp.ui.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
+import com.lithiumsheep.jacketapp.R;
 import com.lithiumsheep.jacketapp.models.Suggestion;
 
 import java.util.ArrayList;
