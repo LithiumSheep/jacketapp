@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/action_location"
-        android:title="Location"
+        android:title="@string/action_location"
         android:orderInCategory="1"
         app:showAsAction="always"
         android:icon="@android:drawable/ic_menu_mylocation" />
 
     <item android:id="@+id/action_voice"
-        android:title="Voice"
+        android:title="@string/action_voice"
         android:orderInCategory="2"
         app:showAsAction="ifRoom"
         android:icon="@android:drawable/ic_btn_speak_now"/>

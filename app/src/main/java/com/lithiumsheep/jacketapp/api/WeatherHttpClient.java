@@ -51,9 +51,4 @@ public class WeatherHttpClient {
     public static void get(Request request, Callback callback) {
         getClient().newCall(request).enqueue(callback);
     }
-
-
-    private String baseUrl() {
-        return "http://api.openweathermap.org/data/2.5/weather";
-    }
 }

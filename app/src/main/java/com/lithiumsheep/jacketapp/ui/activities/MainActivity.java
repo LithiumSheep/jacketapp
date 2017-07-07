@@ -12,8 +12,6 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.lithiumsheep.jacketapp.R;
 import com.lithiumsheep.jacketapp.api.WeatherApi;
@@ -28,7 +26,10 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Request;
+import okhttp3.Response;
 import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
@@ -46,7 +47,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_alternate);
         ButterKnife.bind(this);
 
-        loadInitialSet();
+        // get last Location if it has been stored
+        Location lastLocation = StorageUtil.getLastLocation(this);
+        if (lastLocation != null) {
+            locText.setText("Last Known Location: \nLat " + lastLocation.getLatitude() + " ; Lon " + lastLocation.getLongitude());
+        }
 
         searchView.setOnMenuItemClickListener(new FloatingSearchView.OnMenuItemClickListener() {
             @Override
@@ -70,24 +75,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void loadInitialSet() {
-        Location lastLocation = StorageUtil.getLastLocation(this);
-        if (lastLocation != null) {
-            locText.setText("Last Known Location: \nLat " + lastLocation.getLatitude() + " ; Lon " + lastLocation.getLongitude());
-        }
-    }
-
-    @OnClick(R.id.button2)
-    void clicked() {
-        getLastLocation();
-    }
-
-    @OnClick(R.id.button)
-    void openSearchActivity() {
-        //StorageUtil.clearAll(this);
-        //confirmZipCode("22102");
-    }
-
     private void getLastLocation() {
         if (!checkPermissions()) {
             requestPermissions();
@@ -98,8 +85,6 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("MissingPermission")
     private void performLocationRequest() {
-        Timber.d("Requesting Last Location...");
-
         WeatherWrapper.getLastLocation(this, new LocationCallback() {
             @Override
             public void onError(Exception exception) {
@@ -109,16 +94,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onLocationSuccess(Location location) {
                 //Timber.d("Location request came back with lat %s lon %s", location.getLatitude(), location.getLongitude());
-                locText.setText(locText.getText() + "\nLat " + location.getLatitude() + " ; Lon " + location.getLongitude());
+                //locText.setText(locText.getText() + "\nLat " + location.getLatitude() + " ; Lon " + location.getLongitude());
+                StorageUtil.storeLastLocation(MainActivity.this, location);
+
                 //geoCodeToAddress(location);
+
+                makeWeatherRequest(location);
             }
         });
     }
 
     private void geoCodeToAddress(Location loc) {
-//        if (StorageUtil.getLastLocation(MainActivity.this) == null) {
-//            Timber.w("SOMETHING IS HORRIBLY WRONG");
-//        }
         WeatherWrapper.getAddressForLoc(loc, new GeocodeCallback() {
             @Override
             public void onError(IOException exception) {
@@ -138,35 +124,30 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void confirmZipCode(String zip) {
-        new MaterialDialog.Builder(this)
-                .title("Is this your zip code?")
-                .content(zip)
-                .positiveText("Yeah")
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
+    private void makeWeatherRequest(Location location) {
+        Request weatherRequest = WeatherApi.weatherRequestByCoord(location);
+
+        WeatherHttpClient.get(weatherRequest, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Timber.e(e);
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+
+                runOnUiThread(new Runnable() {
                     @Override
-                    public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction) {
-
+                    public void run() {
+                        try {
+                            locText.setText(response.body().string());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
-                })
-                .negativeText("Nope")
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction) {
-                        Timber.d("FUUUUUUU");
-                    }
-                })
-                .build().show();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
+                });
+            }
+        });
     }
 
     private boolean checkPermissions() {
