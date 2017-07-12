@@ -3,7 +3,6 @@ package com.lithiumsheep.jacketapp.ui.activities;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
-import android.location.Address;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -16,13 +15,11 @@ import com.arlib.floatingsearchview.FloatingSearchView;
 import com.lithiumsheep.jacketapp.R;
 import com.lithiumsheep.jacketapp.api.WeatherApi;
 import com.lithiumsheep.jacketapp.api.WeatherHttpClient;
-import com.lithiumsheep.jacketapp.util.StorageUtil;
-import com.lithiumsheep.weatherwrapperwhuut.GeocodeCallback;
-import com.lithiumsheep.weatherwrapperwhuut.LocationCallback;
 import com.lithiumsheep.weatherwrapperwhuut.WeatherWrapper;
+import com.lithiumsheep.weatherwrapperwhuut.models.WeatherPointModel;
+import com.lithiumsheep.weatherwrapperwhuut.weather.WeatherCallback;
 
 import java.io.IOException;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,12 +43,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_alternate);
         ButterKnife.bind(this);
-
-        // get last Location if it has been stored
-        Location lastLocation = StorageUtil.getLastLocation(this);
-        if (lastLocation != null) {
-            locText.setText("Last Known Location: \nLat " + lastLocation.getLatitude() + " ; Lon " + lastLocation.getLongitude());
-        }
 
         searchView.setOnMenuItemClickListener(new FloatingSearchView.OnMenuItemClickListener() {
             @Override
@@ -85,41 +76,17 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("MissingPermission")
     private void performLocationRequest() {
-        WeatherWrapper.getLastLocation(this, new LocationCallback() {
+        locText.setText("Loading...");
+        WeatherWrapper.getWeatherForCurrentLocation(this, new WeatherCallback() {
             @Override
-            public void onError(Exception exception) {
+            public void onFailure(Exception exception) {
                 Timber.e(exception);
+                locText.setText("Hit onFailure of Weathercallback \n" + exception.getMessage());
             }
 
             @Override
-            public void onLocationSuccess(Location location) {
-                //Timber.d("Location request came back with lat %s lon %s", location.getLatitude(), location.getLongitude());
-                //locText.setText(locText.getText() + "\nLat " + location.getLatitude() + " ; Lon " + location.getLongitude());
-                StorageUtil.storeLastLocation(MainActivity.this, location);
-
-                //geoCodeToAddress(location);
-
-                makeWeatherRequest(location);
-            }
-        });
-    }
-
-    private void geoCodeToAddress(Location loc) {
-        WeatherWrapper.getAddressForLoc(loc, new GeocodeCallback() {
-            @Override
-            public void onError(IOException exception) {
-                Timber.e(exception);
-            }
-
-            @Override
-            public void onSuccess(List<Address> addresses) {
-                for (Address address : addresses) {
-                    if (address.getPostalCode() != null) {
-                        Timber.d("First valid zip is " + address.getPostalCode());
-                        StorageUtil.storeLastZip(MainActivity.this, address.getPostalCode());
-                        break;
-                    }
-                }
+            public void onSuccess(WeatherPointModel weatherPoint) {
+                locText.setText("Location: " + weatherPoint.getLocationName() + "\n" + "Temperature: " + weatherPoint.getCurrentTemp());
             }
         });
     }
