@@ -2,6 +2,7 @@ package com.lithiumsheep.jacketapp.ui.activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
@@ -50,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
                 if (item.getItemId() == R.id.action_location) {
                     // check if last location exists on disk, if yes ask to continue
                     getLastLocation();
+                } else if (item.getItemId() == R.id.action_voice) {
+                    Intent intent = new Intent(MainActivity.this, SplashActivity.class);
+                    startActivity(intent);
                 }
             }
         });
