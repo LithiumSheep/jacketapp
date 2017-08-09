@@ -58,6 +58,6 @@ dependencies {
     }
 
     compile 'com.github.AhmadNemati:WindView:1.1.1'
-    compile 'com.github.arimorty:floatingsearchview:2.0.3'
+    compile 'com.github.arimorty:floatingsearchview:2.1.1'
     compile 'com.afollestad.material-dialogs:core:0.9.4.5'
 }
