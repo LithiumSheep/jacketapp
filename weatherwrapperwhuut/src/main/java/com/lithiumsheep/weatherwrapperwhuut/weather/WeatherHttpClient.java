@@ -14,14 +14,19 @@ import okhttp3.logging.HttpLoggingInterceptor;
 
 public class WeatherHttpClient {
 
-    private static boolean loggable = false;
-    public static void enableLogging(boolean enableLogging) {
-        loggable = enableLogging;
+    private static boolean basicLogging = false;
+    public static void enableLogging(boolean enableBasicLogging) {
+        basicLogging = enableBasicLogging;
+    }
+
+    private static boolean prettyLogging = false;
+    public static void enablePrettyLogging(boolean enablePrettyLogging) {
+        prettyLogging = enablePrettyLogging;
     }
 
     private static LoggingInterceptor prettyLoggger() {
         return new LoggingInterceptor.Builder()
-                .loggable(loggable)
+                .loggable(prettyLogging)
                 .setLevel(Level.BASIC)
                 .log(Log.INFO)
                 .request("Request")
@@ -32,8 +37,7 @@ public class WeatherHttpClient {
 
     private static HttpLoggingInterceptor JacketWharton() {
         HttpLoggingInterceptor logger = new HttpLoggingInterceptor();
-        logger.setLevel(HttpLoggingInterceptor.Level.BASIC);
-        //logger.setLevel(HttpLoggingInterceptor.Level.BODY);
+        logger.setLevel(basicLogging ? HttpLoggingInterceptor.Level.BASIC : HttpLoggingInterceptor.Level.NONE);
         return logger;
     }
 
@@ -42,6 +46,7 @@ public class WeatherHttpClient {
         if (client == null) {
             client = new OkHttpClient.Builder()
                     .addInterceptor(prettyLoggger())
+                    .addInterceptor(JacketWharton())
                     .connectTimeout(10, TimeUnit.SECONDS)
                     .writeTimeout(10, TimeUnit.SECONDS)
                     .readTimeout(10, TimeUnit.SECONDS)

@@ -4,7 +4,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 
-import com.lithiumsheep.weatherwrapperwhuut.models.WeatherPointModel;
+import com.lithiumsheep.weatherwrapperwhuut.models.CurrentWeather;
+import com.lithiumsheep.weatherwrapperwhuut.models.WeatherError;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 
@@ -31,11 +32,11 @@ public abstract class WeatherCallback implements Callback {
 
     @Override
     public void onResponse(@NonNull Call call, @NonNull Response response) {
+        Moshi moshi = new Moshi.Builder().build();
         if (response.isSuccessful()) {
-            Moshi moshi = new Moshi.Builder().build();
-            JsonAdapter<WeatherPointModel> jsonAdapter = moshi.adapter(WeatherPointModel.class);
+            JsonAdapter<CurrentWeather> jsonAdapter = moshi.adapter(CurrentWeather.class);
             try {
-                final WeatherPointModel weatherPoint = jsonAdapter.fromJson(response.body().string());
+                final CurrentWeather weatherPoint = jsonAdapter.fromJson(response.body().string());
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
@@ -43,13 +44,24 @@ public abstract class WeatherCallback implements Callback {
                     }
                 });
             } catch (IOException e) {
-                onFailure(e);
+                onFailure(call, e);
             }
         } else {
-            onFailure(new Exception());
+            JsonAdapter<WeatherError> jsonAdapter = moshi.adapter(WeatherError.class);
+            try {
+                final WeatherError error = jsonAdapter.fromJson(response.body().string());
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        onFailure(new Exception(error.getMessage()));
+                    }
+                });
+            } catch (IOException e) {
+                onFailure(call, e);
+            }
         }
     }
 
     public abstract void onFailure(Exception exception);
-    public abstract void onSuccess(WeatherPointModel weatherPoint);
+    public abstract void onSuccess(CurrentWeather currentWeather);
 }

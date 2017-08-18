@@ -3,4 +3,6 @@
 
     <string name="action_location">Location</string>
     <string name="action_voice">Voice</string>
+
+    <string name="loading">Loading…</string>
 </resources>

@@ -1,23 +1,23 @@
 package com.lithiumsheep.jacketapp.ui.activities;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.lithiumsheep.jacketapp.R;
 import com.lithiumsheep.jacketapp.api.WeatherApi;
 import com.lithiumsheep.jacketapp.api.WeatherHttpClient;
+import com.lithiumsheep.jacketapp.util.PermissionUtil;
 import com.lithiumsheep.weatherwrapperwhuut.WeatherWrapper;
-import com.lithiumsheep.weatherwrapperwhuut.models.WeatherPointModel;
+import com.lithiumsheep.weatherwrapperwhuut.models.CurrentWeather;
 import com.lithiumsheep.weatherwrapperwhuut.weather.WeatherCallback;
 
 import java.io.IOException;
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
             public void onActionMenuItemSelected(MenuItem item) {
                 if (item.getItemId() == R.id.action_location) {
                     // check if last location exists on disk, if yes ask to continue
-                    getLastLocation();
+                    getWeather();
                 } else if (item.getItemId() == R.id.action_voice) {
                     Intent intent = new Intent(MainActivity.this, SplashActivity.class);
                     startActivity(intent);
@@ -70,67 +70,63 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void getLastLocation() {
-        if (!checkPermissions()) {
-            requestPermissions();
+    private void getWeather() {
+        if (!PermissionUtil.hasLocationPermission(this)) {
+            Timber.d("Requesting location permissions...");
+            PermissionUtil.requestLocationPermission(this, LEET_LOCATION_REQUEST_CODE);
         } else {
-            performLocationRequest();
+            WeatherWrapper.enablePrettyLogging(true);
+
+            //performLocationRequestForWeather();
+            performWeatherRequestByZip(searchView.getQuery());
         }
     }
 
     @SuppressLint("MissingPermission")
-    private void performLocationRequest() {
-        locText.setText("Loading...");
+    private void performLocationRequestForWeather() {
+        locText.setText(R.string.loading);
         WeatherWrapper.getWeatherForCurrentLocation(this, new WeatherCallback() {
             @Override
             public void onFailure(Exception exception) {
                 Timber.e(exception);
-                locText.setText("Hit onFailure of Weathercallback \n" + exception.getMessage());
+                Toast.makeText(MainActivity.this,
+                        exception.getMessage(), Toast.LENGTH_LONG).show();
             }
 
             @Override
-            public void onSuccess(WeatherPointModel weatherPoint) {
-                locText.setText("Location: " + weatherPoint.getLocationName() + "\n" + "Temperature: " + weatherPoint.getCurrentTemp());
+            public void onSuccess(CurrentWeather currentWeather) {
+                Toast.makeText(MainActivity.this,
+                        "Success!", Toast.LENGTH_SHORT).show();
+                setText(currentWeather);
             }
         });
     }
 
-    private void makeWeatherRequest(Location location) {
-        Request weatherRequest = WeatherApi.weatherRequestByCoord(location);
-
-        WeatherHttpClient.get(weatherRequest, new Callback() {
+    private void performWeatherRequestByZip(String zipCode) {
+        WeatherWrapper.getWeatherByZip(zipCode, new WeatherCallback() {
             @Override
-            public void onFailure(Call call, IOException e) {
-                Timber.e(e);
+            public void onFailure(Exception exception) {
+                Timber.e(exception);
+                Toast.makeText(MainActivity.this,
+                        exception.getMessage(), Toast.LENGTH_LONG).show();
             }
 
             @Override
-            public void onResponse(Call call, final Response response) throws IOException {
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            locText.setText(response.body().string());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
+            public void onSuccess(CurrentWeather currentWeather) {
+                Toast.makeText(MainActivity.this,
+                        "Success!", Toast.LENGTH_SHORT).show();
+                setText(currentWeather);
             }
         });
     }
 
-    private boolean checkPermissions() {
-        int permissionState = ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION);
-        return permissionState == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void requestPermissions() {
-        Timber.d("Requesting location permissions...");
-        ActivityCompat.requestPermissions(MainActivity.this,
-                new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LEET_LOCATION_REQUEST_CODE);
+    private void setText(CurrentWeather currentWeather) {
+        String weatherText = "Location: " + currentWeather.getLocationName()
+                + "\nTemperature: " + currentWeather.getCurrentTemp()
+                + "\nClouds: " + currentWeather.getClouds().getAll()
+                + "\nWind: " + currentWeather.getWind().getSpeed()
+                + "\nWeather: " + currentWeather.getWeatherList().get(0).getDescription();
+        locText.setText(weatherText);
     }
 
     @Override
@@ -140,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
             if (grantResults.length <= 0) {
                 Timber.w("Location request was interrupted (by user?)");
             } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                getLastLocation();
+                getWeather();
             } else {
                 Timber.d("Location requested denied by user");
             }

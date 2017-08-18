@@ -32,4 +32,15 @@ class WeatherApi {
                         .build())
                 .build();
     }
+
+    static Request weatherRequestByZip(String zipCode) {
+        return new Request.Builder()
+                .url(new HttpUrl.Builder()
+                        .scheme("http").host(baseUrl())
+                        .addPathSegments(pathSegments())
+                        .addQueryParameter("zip", zipCode)
+                        .addQueryParameter("appid", getAppId())
+                        .build())
+                .build();
+    }
 }

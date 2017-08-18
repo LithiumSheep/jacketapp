@@ -4,7 +4,7 @@ import com.squareup.moshi.Json;
 
 public class TemperatureRange {
 
-    public enum TempScale {
+    public enum Unit {
         KELVIN,
         CELCIUS,
         FAHRENHEIT
@@ -19,24 +19,24 @@ public class TemperatureRange {
     @Json(name = "temp_max")
     float maxTemperature;
 
-    TempScale temperatureScale;
+    Unit temperatureUnit;
 
     TemperatureRange(float current_temp, float min_temp, float max_temp) {
         this.currentTemperature = current_temp;
         this.minTemperature = min_temp;
         this.maxTemperature = max_temp;
-        this.temperatureScale = TempScale.KELVIN;
+        this.temperatureUnit = Unit.KELVIN;
     }
 
-    public float currentTemperature(TempScale scale) {
+    public float currentTemperature(Unit unit) {
         return this.currentTemperature;
     }
 
-    public float maxTemperature(TempScale scale) {
+    public float maxTemperature(Unit unit) {
         return this.maxTemperature;
     }
 
-    public float minTemperature(TempScale scale) {
+    public float minTemperature(Unit unit) {
         return this.minTemperature;
     }
 
