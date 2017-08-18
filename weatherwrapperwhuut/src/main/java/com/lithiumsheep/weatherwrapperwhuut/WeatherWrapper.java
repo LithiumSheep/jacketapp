@@ -11,7 +11,6 @@ import com.lithiumsheep.weatherwrapperwhuut.weather.WeatherCallback;
 import com.lithiumsheep.weatherwrapperwhuut.weather.WeatherHttpClient;
 import com.lithiumsheep.weatherwrapperwhuut.weather.WeatherManager;
 
-import timber.log.Timber;
 
 public class WeatherWrapper {
 
