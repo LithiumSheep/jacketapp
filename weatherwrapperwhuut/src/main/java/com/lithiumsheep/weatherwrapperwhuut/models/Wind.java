@@ -8,21 +8,13 @@ public class Wind {
     private float speed;
 
     @Json(name = "deg")
-    private int degrees;
+    private float degrees;
 
     public float getSpeed() {
         return speed;
     }
 
-    public void setSpeed(float speed) {
-        this.speed = speed;
-    }
-
-    public int getDegrees() {
+    public float getDegrees() {
         return degrees;
-    }
-
-    public void setDegrees(int degrees) {
-        this.degrees = degrees;
     }
 }
