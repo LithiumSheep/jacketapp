@@ -1,4 +1,4 @@
-package com.lithiumsheep.jacketapp;
+package com.lithiumsheep.jacketapp.models;
 
 import android.annotation.SuppressLint;
 import android.os.Parcel;

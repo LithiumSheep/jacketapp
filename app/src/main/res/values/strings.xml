@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">Jacket App</string>
+    <string name="app_name">JacketApp</string>
+
+    <string name="openweathermap_appid">2f3e06e1d1a7d3ac7eb733be32aef344</string>
+
+    <string name="action_location">Location</string>
+    <string name="action_voice">Voice</string>
+
+    <string name="loading">Loading…</string>
 </resources>

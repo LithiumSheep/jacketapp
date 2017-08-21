@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "26.0.0"
+    buildToolsVersion "26.0.1"
     defaultConfig {
         applicationId "com.lithiumsheep.jacketapp"
         minSdkVersion 21
@@ -26,6 +26,7 @@ android {
 }
 
 repositories {
+    maven { url "https://jitpack.io" }
     google()
 }
 
@@ -37,8 +38,7 @@ dependencies {
     })
     testCompile 'junit:junit:4.12'
 
-    // https://www.reddit.com/r/androiddev/comments/6fww6h/play_services_11_released/
-    compile 'com.google.android.gms:play-services-location:11.0.2'
+    compile project(':weatherwrapper')
 
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
@@ -49,12 +49,12 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.5.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
 
-    compile 'com.squareup.okhttp3:okhttp:3.8.0'
-    compile('com.github.ihsanbal:LoggingInterceptor:2.0.0') {
+    compile 'com.squareup.okhttp3:okhttp:3.8.1'
+    compile('com.github.ihsanbal:LoggingInterceptor:2.0.2') {
         exclude group: 'org.json', module: 'json'
     }
 
     compile 'com.github.AhmadNemati:WindView:1.1.1'
-    compile 'com.github.arimorty:floatingsearchview:2.0.3'
+    compile 'com.github.arimorty:floatingsearchview:2.1.1'
     compile 'com.afollestad.material-dialogs:core:0.9.4.5'
 }
