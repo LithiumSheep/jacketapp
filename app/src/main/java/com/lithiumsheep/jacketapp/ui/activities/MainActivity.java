@@ -39,12 +39,13 @@ public class MainActivity extends AppCompatActivity {
         searchView.setOnMenuItemClickListener(new FloatingSearchView.OnMenuItemClickListener() {
             @Override
             public void onActionMenuItemSelected(MenuItem item) {
-                if (item.getItemId() == R.id.action_location) {
+                if (item.getItemId() == R.id.action_search) {
                     // check if last location exists on disk, if yes ask to continue
                     getWeather();
-                } else if (item.getItemId() == R.id.action_voice) {
-                    Intent intent = new Intent(MainActivity.this, SplashActivity.class);
-                    startActivity(intent);
+                } else if (item.getItemId() == R.id.action_location) {
+                    /*Intent intent = new Intent(MainActivity.this, SplashActivity.class);
+                    startActivity(intent);*/
+                    getWeatherByLocation();
                 }
             }
         });
@@ -62,12 +63,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getWeather() {
+        performWeatherRequestByZip(searchView.getQuery());
+    }
+
+    private void getWeatherByLocation() {
         if (!PermissionUtil.hasLocationPermission(this)) {
             Timber.d("Requesting location permissions...");
             PermissionUtil.requestLocationPermission(this, LEET_LOCATION_REQUEST_CODE);
         } else {
-            //performLocationRequestForWeather();
-            performWeatherRequestByZip(searchView.getQuery());
+            performLocationRequestForWeather();
         }
     }
 
