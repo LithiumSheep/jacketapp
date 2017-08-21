@@ -61,4 +61,13 @@ public class CurrentWeather {
     public String getLocationName() {
         return locationName;
     }
+
+    @Override
+    public String toString() {
+        return "Location: " + getLocationName()
+                + "\nTemperature: " + getCurrentTemp()
+                + "\nClouds: " + getClouds().getAll()
+                + "\nWind: " + getWind().getSpeed()
+                + "\nWeather: " + getWeatherList().get(0).getDescription();
+    }
 }

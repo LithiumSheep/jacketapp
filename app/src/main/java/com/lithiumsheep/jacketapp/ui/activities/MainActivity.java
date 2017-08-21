@@ -114,12 +114,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setText(CurrentWeather currentWeather) {
-        String weatherText = "Location: " + currentWeather.getLocationName()
-                + "\nTemperature: " + currentWeather.getCurrentTemp()
-                + "\nClouds: " + currentWeather.getClouds().getAll()
-                + "\nWind: " + currentWeather.getWind().getSpeed()
-                + "\nWeather: " + currentWeather.getWeatherList().get(0).getDescription();
-        locText.setText(weatherText);
+        locText.setText(currentWeather.toString());
     }
 
     @Override
