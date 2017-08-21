@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         WeatherWrapper.getWeatherForCurrentLocation(this, new WeatherCallback() {
             @Override
             public void onFailure(Exception exception) {
-                Timber.e(exception);
+                Timber.e(exception.getMessage());
                 Toast.makeText(MainActivity.this,
                         exception.getMessage(), Toast.LENGTH_LONG).show();
             }
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
         WeatherWrapper.getWeatherByZip(zipCode, new WeatherCallback() {
             @Override
             public void onFailure(Exception exception) {
-                Timber.e(exception);
+                Timber.e(exception.getMessage());
                 Toast.makeText(MainActivity.this,
                         exception.getMessage(), Toast.LENGTH_LONG).show();
             }

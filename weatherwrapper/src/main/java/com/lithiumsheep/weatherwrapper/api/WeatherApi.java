@@ -23,7 +23,7 @@ class WeatherApi {
     static Request weatherRequestByCoord(Location loc) {
         return new Request.Builder()
                 .url(new HttpUrl.Builder()
-                        .scheme("http")
+                        .scheme("https")
                         .host(baseUrl())
                         .addPathSegments(pathSegments())
                         .addQueryParameter("lat",
@@ -38,7 +38,7 @@ class WeatherApi {
     static Request weatherRequestByZip(String zipCode) {
         return new Request.Builder()
                 .url(new HttpUrl.Builder()
-                        .scheme("http").host(baseUrl())
+                        .scheme("https").host(baseUrl())
                         .addPathSegments(pathSegments())
                         .addQueryParameter("zip", zipCode)
                         .addQueryParameter("appid", getAppId())

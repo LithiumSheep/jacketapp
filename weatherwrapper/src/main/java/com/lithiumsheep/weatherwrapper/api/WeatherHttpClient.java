@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.ihsanbal.logging.Level;
 import com.ihsanbal.logging.LoggingInterceptor;
-import com.lithiumsheep.weatherwrapper.BuildConfig;
 import com.lithiumsheep.weatherwrapper.WeatherWrapper;
 
 import java.util.concurrent.TimeUnit;
@@ -23,7 +22,7 @@ class WeatherHttpClient {
                 .log(Log.INFO)
                 .request("WeatherWrapper")
                 .response("WeatherWrapper")
-                .addHeader(BuildConfig.APPLICATION_ID.concat("version"), BuildConfig.VERSION_NAME)
+                //.addHeader(BuildConfig.APPLICATION_ID.concat("_version"), BuildConfig.VERSION_NAME)
                 .build();
     }
 
