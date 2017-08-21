@@ -1,9 +1,11 @@
-package com.lithiumsheep.weatherwrapperwhuut.weather;
+package com.lithiumsheep.weatherwrapperwhuut.api;
 
 import android.util.Log;
 
 import com.ihsanbal.logging.Level;
 import com.ihsanbal.logging.LoggingInterceptor;
+import com.lithiumsheep.weatherwrapperwhuut.BuildConfig;
+import com.lithiumsheep.weatherwrapperwhuut.WeatherWrapper;
 
 import java.util.concurrent.TimeUnit;
 
@@ -12,32 +14,23 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
 
-public class WeatherHttpClient {
-
-    private static boolean basicLogging = false;
-    public static void enableLogging(boolean enableBasicLogging) {
-        basicLogging = enableBasicLogging;
-    }
-
-    private static boolean prettyLogging = false;
-    public static void enablePrettyLogging(boolean enablePrettyLogging) {
-        prettyLogging = enablePrettyLogging;
-    }
+class WeatherHttpClient {
 
     private static LoggingInterceptor prettyLoggger() {
         return new LoggingInterceptor.Builder()
-                .loggable(prettyLogging)
+                .loggable(WeatherWrapper.getConfig().prettyLoggingEnabled())
                 .setLevel(Level.BASIC)
                 .log(Log.INFO)
-                .request("Request")
-                .response("Response")
-                //.addHeader("version", BuildConfig.VERSION_NAME)
+                .request("WeatherWrapper")
+                .response("WeatherWrapper")
+                .addHeader(BuildConfig.APPLICATION_ID.concat("version"), BuildConfig.VERSION_NAME)
                 .build();
     }
 
     private static HttpLoggingInterceptor JacketWharton() {
         HttpLoggingInterceptor logger = new HttpLoggingInterceptor();
-        logger.setLevel(basicLogging ? HttpLoggingInterceptor.Level.BASIC : HttpLoggingInterceptor.Level.NONE);
+        logger.setLevel(WeatherWrapper.getConfig().basicLoggingEnabled() ?
+                HttpLoggingInterceptor.Level.BASIC : HttpLoggingInterceptor.Level.NONE);
         return logger;
     }
 

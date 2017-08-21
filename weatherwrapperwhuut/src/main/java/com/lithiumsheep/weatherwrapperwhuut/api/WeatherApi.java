@@ -1,6 +1,8 @@
-package com.lithiumsheep.weatherwrapperwhuut.weather;
+package com.lithiumsheep.weatherwrapperwhuut.api;
 
 import android.location.Location;
+
+import com.lithiumsheep.weatherwrapperwhuut.WeatherWrapper;
 
 import okhttp3.HttpUrl;
 import okhttp3.Request;
@@ -15,7 +17,7 @@ class WeatherApi {
     }
 
     private static String getAppId() {
-        return "2f3e06e1d1a7d3ac7eb733be32aef344";
+        return WeatherWrapper.getConfig().getAppID();
     }
 
     static Request weatherRequestByCoord(Location loc) {

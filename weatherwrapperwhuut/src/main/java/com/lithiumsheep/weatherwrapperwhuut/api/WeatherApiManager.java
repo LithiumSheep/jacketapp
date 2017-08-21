@@ -1,15 +1,18 @@
-package com.lithiumsheep.weatherwrapperwhuut.weather;
+package com.lithiumsheep.weatherwrapperwhuut.api;
 
 import android.location.Location;
+import android.support.annotation.RestrictTo;
 
-public class WeatherManager {
+public class WeatherApiManager {
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     public static void getWeatherForLocation(Location location, WeatherCallback weatherCallback) {
         WeatherHttpClient.get(
                 WeatherApi.weatherRequestByCoord(location),
                 weatherCallback);
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     public static void getWeatherByZip(String zipCode, WeatherCallback weatherCallback) {
         WeatherHttpClient.get(
                 WeatherApi.weatherRequestByZip(zipCode),

@@ -3,37 +3,31 @@ package com.lithiumsheep.weatherwrapperwhuut;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.location.Location;
+import android.support.annotation.RestrictTo;
 
-import com.lithiumsheep.weatherwrapperwhuut.location.GeocodeCallback;
 import com.lithiumsheep.weatherwrapperwhuut.location.LocationCallback;
 import com.lithiumsheep.weatherwrapperwhuut.location.LocationManager;
-import com.lithiumsheep.weatherwrapperwhuut.weather.WeatherCallback;
-import com.lithiumsheep.weatherwrapperwhuut.weather.WeatherHttpClient;
-import com.lithiumsheep.weatherwrapperwhuut.weather.WeatherManager;
+import com.lithiumsheep.weatherwrapperwhuut.api.WeatherCallback;
+import com.lithiumsheep.weatherwrapperwhuut.api.WeatherApiManager;
 
 
 public class WeatherWrapper {
 
-    public static void enableBasicLogging(boolean enableBasicLogging) {
-        WeatherHttpClient.enableLogging(enableBasicLogging);
+    private static WeatherWrapperConfig config = new WeatherWrapperConfig();
+
+    @RestrictTo(RestrictTo.Scope.LIBRARY)   // does this do anything?
+    public static WeatherWrapperConfig getConfig() {
+        return config;
     }
 
-    public static void enablePrettyLogging(boolean enablePrettyLogging) {
-        WeatherHttpClient.enablePrettyLogging(enablePrettyLogging);
-    }
-
-    public static void initialize(String weatherApiAppId) {
-        // set the weather api APP_ID?
-    }
-
-    public static void geocodeAddress(Context context, Location loc, GeocodeCallback geocodeCallback) {
-        new LocationManager(context).geocodeAddressFromLocation(loc, geocodeCallback);
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
+    static void setConfig(WeatherWrapperConfig config) {
+        WeatherWrapper.config = config;
     }
 
     @SuppressLint("MissingPermission")  // TODO: Also wrap the location permission
     public static void getLastLocation(Context context, final LocationCallback locationCallback) {
-        // check cache and freshness
-        // if fresh, return that
+        // TODO: Implement Location cache, if cache is fresh return cached location
         new LocationManager(context).getLastLocation(locationCallback);
     }
 
@@ -46,16 +40,16 @@ public class WeatherWrapper {
 
             @Override
             public void onLocationSuccess(Location location) {
-                WeatherManager.getWeatherForLocation(location, weatherCallback);
+                WeatherApiManager.getWeatherForLocation(location, weatherCallback);
             }
         });
     }
 
     public static void getWeatherWithLocation(Location location, WeatherCallback weatherCallback) {
-        WeatherManager.getWeatherForLocation(location, weatherCallback);
+        WeatherApiManager.getWeatherForLocation(location, weatherCallback);
     }
 
     public static void getWeatherByZip(String zipCode, WeatherCallback weatherCallback) {
-        WeatherManager.getWeatherByZip(zipCode, weatherCallback);
+        WeatherApiManager.getWeatherByZip(zipCode, weatherCallback);
     }
 }

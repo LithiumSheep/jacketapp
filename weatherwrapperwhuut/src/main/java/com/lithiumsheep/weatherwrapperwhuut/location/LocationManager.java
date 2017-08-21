@@ -2,8 +2,6 @@ package com.lithiumsheep.weatherwrapperwhuut.location;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.support.annotation.NonNull;
 
@@ -12,21 +10,16 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-import java.io.IOException;
-import java.util.List;
-
-import timber.log.Timber;
-
 public class LocationManager {
 
     private FusedLocationProviderClient fusedLocationClient;
-    private Geocoder geocoder;
-    private int defaultGeocoderMaxResults = 5;
+    //private Geocoder geocoder;
+    //private int defaultGeocoderMaxResults = 5;
 
     public LocationManager(Context context) {
         fusedLocationClient =
                 LocationServices.getFusedLocationProviderClient(context);
-        geocoder = new Geocoder(context);
+        //geocoder = new Geocoder(context);
     }
 
     @SuppressLint("MissingPermission")
@@ -44,13 +37,13 @@ public class LocationManager {
                 });
     }
 
-    public void setGeocoderMaxResults(int maxNumberOfResults) {
+    /*public void setGeocoderMaxResults(int maxNumberOfResults) {
         defaultGeocoderMaxResults = maxNumberOfResults;
     }
 
     public void geocodeAddressFromLocation(Location location, GeocodeCallback geocodeCallback) {
         if (geocoder == null) {
-            Timber.e("Geocoder was null.  Make sure you initialize WeatherWrapper before calling getAddressForLoc");
+            Log.e("LocationManager", "Geocoder was null.  Make sure you initialize WeatherWrapper before calling getAddressForLoc");
             return;
         }
 
@@ -60,5 +53,5 @@ public class LocationManager {
         } catch (IOException e) {
             geocodeCallback.onError(e);
         }
-    }
+    }*/
 }

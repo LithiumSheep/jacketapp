@@ -1,4 +1,4 @@
-package com.lithiumsheep.weatherwrapperwhuut.weather;
+package com.lithiumsheep.weatherwrapperwhuut.api;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -53,7 +53,7 @@ public abstract class WeatherCallback implements Callback {
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
-                        onFailure(new Exception(error.getMessage()));
+                        onFailure(new RuntimeException(error.getMessage()));
                     }
                 });
             } catch (IOException e) {

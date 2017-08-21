@@ -3,7 +3,6 @@ package com.lithiumsheep.jacketapp.ui.activities;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,21 +12,13 @@ import android.widget.Toast;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.lithiumsheep.jacketapp.R;
-import com.lithiumsheep.jacketapp.api.WeatherApi;
-import com.lithiumsheep.jacketapp.api.WeatherHttpClient;
 import com.lithiumsheep.jacketapp.util.PermissionUtil;
 import com.lithiumsheep.weatherwrapperwhuut.WeatherWrapper;
 import com.lithiumsheep.weatherwrapperwhuut.models.CurrentWeather;
-import com.lithiumsheep.weatherwrapperwhuut.weather.WeatherCallback;
-
-import java.io.IOException;
+import com.lithiumsheep.weatherwrapperwhuut.api.WeatherCallback;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Request;
-import okhttp3.Response;
 import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
@@ -75,8 +66,6 @@ public class MainActivity extends AppCompatActivity {
             Timber.d("Requesting location permissions...");
             PermissionUtil.requestLocationPermission(this, LEET_LOCATION_REQUEST_CODE);
         } else {
-            WeatherWrapper.enablePrettyLogging(true);
-
             //performLocationRequestForWeather();
             performWeatherRequestByZip(searchView.getQuery());
         }
