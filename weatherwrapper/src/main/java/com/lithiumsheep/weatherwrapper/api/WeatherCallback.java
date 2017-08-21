@@ -1,11 +1,11 @@
-package com.lithiumsheep.weatherwrapperwhuut.api;
+package com.lithiumsheep.weatherwrapper.api;
 
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 
-import com.lithiumsheep.weatherwrapperwhuut.models.CurrentWeather;
-import com.lithiumsheep.weatherwrapperwhuut.models.WeatherError;
+import com.lithiumsheep.weatherwrapper.models.CurrentWeather;
+import com.lithiumsheep.weatherwrapper.models.WeatherError;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 

@@ -1,4 +1,4 @@
-package com.lithiumsheep.weatherwrapperwhuut.models;
+package com.lithiumsheep.weatherwrapper.models;
 
 import com.squareup.moshi.Json;
 

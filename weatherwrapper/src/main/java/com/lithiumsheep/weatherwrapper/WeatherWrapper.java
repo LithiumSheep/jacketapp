@@ -1,14 +1,14 @@
-package com.lithiumsheep.weatherwrapperwhuut;
+package com.lithiumsheep.weatherwrapper;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.location.Location;
 import android.support.annotation.RestrictTo;
 
-import com.lithiumsheep.weatherwrapperwhuut.location.LocationCallback;
-import com.lithiumsheep.weatherwrapperwhuut.location.LocationManager;
-import com.lithiumsheep.weatherwrapperwhuut.api.WeatherCallback;
-import com.lithiumsheep.weatherwrapperwhuut.api.WeatherApiManager;
+import com.lithiumsheep.weatherwrapper.location.LocationCallback;
+import com.lithiumsheep.weatherwrapper.location.LocationManager;
+import com.lithiumsheep.weatherwrapper.api.WeatherCallback;
+import com.lithiumsheep.weatherwrapper.api.WeatherApiManager;
 
 
 public class WeatherWrapper {

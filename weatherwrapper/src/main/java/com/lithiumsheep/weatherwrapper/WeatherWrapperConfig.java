@@ -1,4 +1,4 @@
-package com.lithiumsheep.weatherwrapperwhuut;
+package com.lithiumsheep.weatherwrapper;
 
 import android.util.Log;
 

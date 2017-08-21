@@ -1,4 +1,4 @@
-package com.lithiumsheep.weatherwrapperwhuut.util;
+package com.lithiumsheep.weatherwrapper.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;

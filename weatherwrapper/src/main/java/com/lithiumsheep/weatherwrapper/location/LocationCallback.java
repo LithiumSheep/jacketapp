@@ -1,4 +1,4 @@
-package com.lithiumsheep.weatherwrapperwhuut.location;
+package com.lithiumsheep.weatherwrapper.location;
 
 import android.location.Location;
 

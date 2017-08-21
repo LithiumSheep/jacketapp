@@ -1,4 +1,4 @@
-package com.lithiumsheep.weatherwrapperwhuut.api;
+package com.lithiumsheep.weatherwrapper.api;
 
 import android.location.Location;
 import android.support.annotation.RestrictTo;

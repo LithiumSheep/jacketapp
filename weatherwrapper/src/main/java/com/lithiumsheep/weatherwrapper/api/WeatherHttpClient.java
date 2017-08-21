@@ -1,11 +1,11 @@
-package com.lithiumsheep.weatherwrapperwhuut.api;
+package com.lithiumsheep.weatherwrapper.api;
 
 import android.util.Log;
 
 import com.ihsanbal.logging.Level;
 import com.ihsanbal.logging.LoggingInterceptor;
-import com.lithiumsheep.weatherwrapperwhuut.BuildConfig;
-import com.lithiumsheep.weatherwrapperwhuut.WeatherWrapper;
+import com.lithiumsheep.weatherwrapper.BuildConfig;
+import com.lithiumsheep.weatherwrapper.WeatherWrapper;
 
 import java.util.concurrent.TimeUnit;
 

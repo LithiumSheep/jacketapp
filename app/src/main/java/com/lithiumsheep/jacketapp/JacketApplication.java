@@ -3,7 +3,7 @@ package com.lithiumsheep.jacketapp;
 
 import android.app.Application;
 
-import com.lithiumsheep.weatherwrapperwhuut.WeatherWrapperConfig;
+import com.lithiumsheep.weatherwrapper.WeatherWrapperConfig;
 
 import timber.log.Timber;
 

@@ -1,8 +1,8 @@
-package com.lithiumsheep.weatherwrapperwhuut.api;
+package com.lithiumsheep.weatherwrapper.api;
 
 import android.location.Location;
 
-import com.lithiumsheep.weatherwrapperwhuut.WeatherWrapper;
+import com.lithiumsheep.weatherwrapper.WeatherWrapper;
 
 import okhttp3.HttpUrl;
 import okhttp3.Request;

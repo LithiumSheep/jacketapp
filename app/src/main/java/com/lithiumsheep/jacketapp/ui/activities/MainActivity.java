@@ -13,9 +13,9 @@ import android.widget.Toast;
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.lithiumsheep.jacketapp.R;
 import com.lithiumsheep.jacketapp.util.PermissionUtil;
-import com.lithiumsheep.weatherwrapperwhuut.WeatherWrapper;
-import com.lithiumsheep.weatherwrapperwhuut.models.CurrentWeather;
-import com.lithiumsheep.weatherwrapperwhuut.api.WeatherCallback;
+import com.lithiumsheep.weatherwrapper.WeatherWrapper;
+import com.lithiumsheep.weatherwrapper.models.CurrentWeather;
+import com.lithiumsheep.weatherwrapper.api.WeatherCallback;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
