@@ -6,17 +6,14 @@ import android.location.Location;
 import android.support.annotation.NonNull;
 
 /**
- * Created by JesseXLi on 7/7/17.
- */
-
-/**
  * Cache freshness is based on Time
- *
+ * <p>
  * Cache policy aggressive invalidates after 15 minutes
  * Cache policy relaxed invalidates after 24 hours
  * Cache policy devil-may-car invalidates after 7 days
  */
 
+// TODO: Decide if this should be implemented or tossed!  First figure out more about getting current location and why it's sometmes null
 public class LocationCache {
 
     public enum CachePolicy {
@@ -45,7 +42,7 @@ public class LocationCache {
     }
 
     public boolean cachedLocationIsFresh() {
-        switch(policy) {
+        switch (policy) {
             case AGGRESSIVE:
                 return false;
             case RELAXED:
