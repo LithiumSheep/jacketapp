@@ -1,5 +1,15 @@
 apply plugin: 'com.android.application'
 
+@SuppressWarnings("GrMethodMayBeStatic")
+def gitBranch() {
+    def branch = ''
+    def proc = 'git rev-parse --abbrev-ref HEAD'.execute()
+    proc.in.eachLine { line -> branch = line }
+    proc.err.eachLine { line -> println line }
+    proc.waitFor()
+    branch
+}
+
 android {
     compileSdkVersion 25
     buildToolsVersion "26.0.1"
@@ -8,13 +18,14 @@ android {
         minSdkVersion 21
         targetSdkVersion 25
         versionCode 1
-        versionName "1.0"
+        versionName "0.1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         debug {
             debuggable true
-            versionNameSuffix "-dev"
+            applicationIdSuffix '.debug'
+            versionNameSuffix ' DEBUG (' + gitBranch() + ')'
         }
         release {
             crunchPngs true
@@ -29,7 +40,6 @@ repositories {
     maven { url "https://jitpack.io" }
     google()
 }
-
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])

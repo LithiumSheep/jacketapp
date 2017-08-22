@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
+import com.lithiumsheep.jacketapp.BuildConfig;
 import com.lithiumsheep.jacketapp.R;
 import com.lithiumsheep.jacketapp.util.PermissionUtil;
 import com.lithiumsheep.weatherwrapper.WeatherWrapper;
@@ -114,7 +115,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setText(CurrentWeather currentWeather) {
-        locText.setText(currentWeather.toString());
+        locText.setText(currentWeather.toString()
+                .concat("\n").concat(BuildConfig.APPLICATION_ID)
+                .concat("\n").concat(BuildConfig.VERSION_NAME)
+        );
     }
 
     @Override
