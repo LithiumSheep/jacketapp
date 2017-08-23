@@ -26,10 +26,8 @@ class WeatherApi {
                         .scheme("https")
                         .host(baseUrl())
                         .addPathSegments(pathSegments())
-                        .addQueryParameter("lat",
-                                Double.valueOf(loc.getLatitude()).toString())
-                        .addQueryParameter("lon",
-                                Double.valueOf(loc.getLongitude()).toString())
+                        .addQueryParameter("lat", Double.toString(loc.getLatitude()))
+                        .addQueryParameter("lon", Double.toString(loc.getLongitude()))
                         .addQueryParameter("appid", getAppId())
                         .build())
                 .build();
