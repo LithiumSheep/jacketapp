@@ -1,7 +1,6 @@
 package com.lithiumsheep.jacketapp.ui.activities;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +16,8 @@ import com.lithiumsheep.jacketapp.util.PermissionUtil;
 import com.lithiumsheep.weatherwrapper.WeatherWrapper;
 import com.lithiumsheep.weatherwrapper.models.CurrentWeather;
 import com.lithiumsheep.weatherwrapper.api.WeatherCallback;
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_alternate);
         ButterKnife.bind(this);
+
+        Drawer drawer = new DrawerBuilder().withActivity(this).build();
 
         searchView.setOnMenuItemClickListener(new FloatingSearchView.OnMenuItemClickListener() {
             @Override
@@ -128,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
             if (grantResults.length <= 0) {
                 Timber.w("Location request was interrupted (by user?)");
             } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                getWeather();
+                getWeather();   // TODO: is this messed up?
             } else {
                 Timber.d("Location requested denied by user");
             }
