@@ -6,4 +6,10 @@
     <string name="action_voice">Voice</string>
 
     <string name="loading">Loading…</string>
+
+    <!--Drawer strings-->
+    <string name="jacket_settings">Jacket preferences</string>
+    <string name="support_development">Support development</string>
+    <string name="settings">Settings</string>
+    <string name="about">About</string>
 </resources>

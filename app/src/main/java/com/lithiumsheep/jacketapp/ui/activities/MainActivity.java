@@ -12,12 +12,12 @@ import android.widget.Toast;
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.lithiumsheep.jacketapp.BuildConfig;
 import com.lithiumsheep.jacketapp.R;
+import com.lithiumsheep.jacketapp.util.DrawerHelper;
 import com.lithiumsheep.jacketapp.util.PermissionUtil;
 import com.lithiumsheep.weatherwrapper.WeatherWrapper;
 import com.lithiumsheep.weatherwrapper.models.CurrentWeather;
 import com.lithiumsheep.weatherwrapper.api.WeatherCallback;
 import com.mikepenz.materialdrawer.Drawer;
-import com.mikepenz.materialdrawer.DrawerBuilder;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_alternate);
         ButterKnife.bind(this);
 
-        Drawer drawer = new DrawerBuilder().withActivity(this).build();
+        Drawer drawer = DrawerHelper.attach(this);
 
         searchView.setOnMenuItemClickListener(new FloatingSearchView.OnMenuItemClickListener() {
             @Override
