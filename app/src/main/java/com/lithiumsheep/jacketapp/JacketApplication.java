@@ -4,6 +4,7 @@ package com.lithiumsheep.jacketapp;
 import android.app.Application;
 
 import com.lithiumsheep.weatherwrapper.WeatherWrapperConfig;
+import com.lithiumsheep.weatherwrapper.models.Temperature;
 
 import timber.log.Timber;
 
@@ -15,10 +16,13 @@ public class JacketApplication extends Application {
 
         Timber.plant(new Timber.DebugTree());
 
+        // get Application defaults from preferences
+
         new WeatherWrapperConfig.Builder()
                 .setAppId(getString(R.string.openweathermap_appid))   // required
                 .setBasicLoggingEnabled(false)  // default: false
                 .setPrettyLoggingEnabled(true) // default: false
+                .withTemperatureUnit(Temperature.Unit.FAHRENHEIT)
                 .build().apply();
     }
 }

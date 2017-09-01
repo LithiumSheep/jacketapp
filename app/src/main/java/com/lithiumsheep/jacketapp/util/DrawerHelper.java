@@ -35,14 +35,14 @@ public class DrawerHelper {
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
                         switch(position) {
                             case 0:
-                                return true;
+                                return false;
                             case 1:
-                                return true;
+                                return false;
                             case 2:
-                                return true;
+                                return false;
                             case 3:
                                 activity.startActivity(new Intent(activity, SettingsActivity.class));
-                                return true;
+                                return false;
 
                             default:
                                 return false;

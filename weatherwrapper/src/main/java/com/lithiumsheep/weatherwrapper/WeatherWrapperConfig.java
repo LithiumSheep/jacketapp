@@ -2,11 +2,18 @@ package com.lithiumsheep.weatherwrapper;
 
 import android.util.Log;
 
+import com.lithiumsheep.weatherwrapper.models.Temperature;
+
 public class WeatherWrapperConfig {
 
     private String appID;
     private boolean basicLogging;
     private boolean prettyLogging;
+    private Temperature.Unit defaultUnit = Temperature.Unit.KELVIN;
+
+    public String getAppID() {
+        return appID;
+    }
 
     public boolean basicLoggingEnabled() {
         return basicLogging;
@@ -16,8 +23,8 @@ public class WeatherWrapperConfig {
         return prettyLogging;
     }
 
-    public String getAppID() {
-        return appID;
+    public Temperature.Unit getTemperatureUnit() {
+        return defaultUnit;
     }
 
     public static class Builder {
@@ -31,6 +38,7 @@ public class WeatherWrapperConfig {
             this.config.appID = currentConfig.appID;
             this.config.basicLogging = currentConfig.basicLogging;
             this.config.prettyLogging = currentConfig.prettyLogging;
+            this.config.defaultUnit = currentConfig.defaultUnit;
         }
 
         public Builder setAppId(String appId) {
@@ -38,13 +46,20 @@ public class WeatherWrapperConfig {
             return this;
         }
 
+        @SuppressWarnings("SameParameterValue")
         public Builder setBasicLoggingEnabled(boolean basicLoggingEnabled) {
             config.basicLogging = basicLoggingEnabled;
             return this;
         }
 
+        @SuppressWarnings("SameParameterValue")
         public Builder setPrettyLoggingEnabled(boolean prettyLoggingEnabled) {
             config.prettyLogging = prettyLoggingEnabled;
+            return this;
+        }
+
+        public Builder withTemperatureUnit(Temperature.Unit targetUnit) {
+            config.defaultUnit = targetUnit;
             return this;
         }
 

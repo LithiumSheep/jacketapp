@@ -13,7 +13,7 @@ public class CurrentWeather {
     private List<Weather> weatherList;
 
     @Json(name = "main")
-    private TemperatureRange temperatureRange;
+    private Temperature temperature;
 
     // visibility?
 
@@ -38,16 +38,8 @@ public class CurrentWeather {
         return weatherList;
     }
 
-    public float getMinTemp() {
-        return temperatureRange.minTemperature;
-    }
-
-    public float getMaxTemp() {
-        return temperatureRange.maxTemperature;
-    }
-
-    public float getCurrentTemp() {
-        return temperatureRange.currentTemperature;
+    public Temperature getTemperature() {
+        return this.temperature;
     }
 
     public Wind getWind() {
@@ -65,7 +57,7 @@ public class CurrentWeather {
     @Override
     public String toString() {
         return "Location: " + getLocationName()
-                + "\nTemperature: " + getCurrentTemp()
+                + "\nTemperature: " + getTemperature().current()
                 + "\nClouds: " + getClouds().getAll()
                 + "\nWind: " + getWind().getSpeed()
                 + "\nWeather: " + getWeatherList().get(0).getDescription();
