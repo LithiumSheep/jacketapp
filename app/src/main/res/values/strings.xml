@@ -26,9 +26,9 @@
     <string name="pref_temp_title">Temperature Unit</string>
 
     <string-array name="pref_temp_options">
-        <item>Fahrenheit</item>
-        <item>Celsius</item>
         <item>Kelvin</item>
+        <item>Celsius</item>
+        <item>Fahrenheit</item>
     </string-array>
 
     <string-array name="pref_temp_values">

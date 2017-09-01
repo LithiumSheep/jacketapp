@@ -3,6 +3,7 @@ package com.lithiumsheep.jacketapp;
 
 import android.app.Application;
 
+import com.lithiumsheep.jacketapp.models.Defaults;
 import com.lithiumsheep.weatherwrapper.WeatherWrapperConfig;
 import com.lithiumsheep.weatherwrapper.models.Temperature;
 
@@ -17,12 +18,13 @@ public class JacketApplication extends Application {
         Timber.plant(new Timber.DebugTree());
 
         // get Application defaults from preferences
+        Defaults userDefaults = new Defaults(this);
 
         new WeatherWrapperConfig.Builder()
                 .setAppId(getString(R.string.openweathermap_appid))   // required
                 .setBasicLoggingEnabled(false)  // default: false
                 .setPrettyLoggingEnabled(true) // default: false
-                .withTemperatureUnit(Temperature.Unit.FAHRENHEIT)
+                .withTemperatureUnit(userDefaults.getDefaultUnit())
                 .build().apply();
     }
 }

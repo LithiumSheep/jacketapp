@@ -6,9 +6,26 @@ import com.squareup.moshi.Json;
 public class Temperature {
 
     public enum Unit {
-        KELVIN,
-        CELCIUS,
-        FAHRENHEIT
+        KELVIN (0, "Kelvin"),
+        CELSIUS (1, "Celsius"),
+        FAHRENHEIT (2, "Fahrenheit");
+
+        private int value;
+        private String simpleName;
+
+        Unit(int value, String simpleName) {
+            this.value = value;
+            this.simpleName = simpleName;
+        }
+
+        public static Unit valueOf(int value) {
+            for (Unit unit : Unit.values()) {
+                if (unit.value == value) {
+                    return unit;
+                }
+            }
+            return null;
+        }
     }
 
     private static Unit targetUnit = WeatherWrapper.getConfig().getTemperatureUnit();
@@ -58,7 +75,7 @@ public class Temperature {
         static float convertTemp(float val, Unit targetUnit) {
             if (targetUnit.equals(Unit.FAHRENHEIT)) {
                 val = toFahrenheit(val, true);
-            } else if (targetUnit.equals(Unit.CELCIUS)) {
+            } else if (targetUnit.equals(Unit.CELSIUS)) {
                 val = toCelsius(val, true);
             }
             return val;
