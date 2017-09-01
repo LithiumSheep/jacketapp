@@ -28,8 +28,6 @@ public class Temperature {
         }
     }
 
-    private static Unit targetUnit = WeatherWrapper.getConfig().getTemperatureUnit();
-
     /**
      * By Default current (temp) is stored as Kelvin, and conversions take from KELVIN -> targetUnit
      */
@@ -42,12 +40,8 @@ public class Temperature {
     @Json(name = "temp_max")
     float maxTemperature;*/
 
-    public static void setDefaultUnit(Unit target) {
-        targetUnit = target;
-    }
-
     public float current() {
-        return Util.convertTemp(this.current, targetUnit);
+        return Util.convertTemp(this.current, WeatherWrapper.getConfig().getTemperatureUnit());
     }
 
     /*public float current(Unit targetUnit) {
