@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <EditTextPreference
-        android:key="@string/pref_user_key"
-        android:summary="@string/pref_user_summary"
-        android:title="@string/pref_user_title" />
+    <PreferenceCategory android:title="General">
 
-    <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="@string/pref_nsfw_key"
-        android:summary="@string/pref_nsfw_summary"
-        android:title="@string/pref_nsfw_title" />
+        <EditTextPreference
+            android:key="@string/pref_user_key"
+            android:summary="@string/pref_user_summary"
+            android:title="@string/pref_user_title" />
 
-    <ListPreference
-        android:defaultValue="0"
-        android:entries="@array/pref_temp_options"
-        android:entryValues="@array/pref_temp_values"
-        android:key="@string/pref_temp_key"
-        android:summary="%s"
-        android:title="@string/pref_temp_title" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_nsfw_key"
+            android:summary="@string/pref_nsfw_summary"
+            android:title="@string/pref_nsfw_title" />
+
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/pref_temp_options"
+            android:entryValues="@array/pref_temp_values"
+            android:key="@string/pref_temp_key"
+            android:summary="%s"
+            android:title="@string/pref_temp_title" />
+
+    </PreferenceCategory>
 
 </PreferenceScreen>
