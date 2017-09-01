@@ -28,6 +28,10 @@
             android:name=".ui.activities.SplashActivity"
             android:theme="@style/AppTheme.TransparentStatus" />
 
+        <activity
+            android:name=".ui.activities.SettingsActivity"
+            android:label="@string/preferences" />
+
     </application>
 
 </manifest>

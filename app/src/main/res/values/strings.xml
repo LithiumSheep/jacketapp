@@ -1,6 +1,8 @@
 <resources>
     <string name="openweathermap_appid">2f3e06e1d1a7d3ac7eb733be32aef344</string>
 
+    <string name="preferences">Preferences</string>
+
     <string name="action_search">Search</string>
     <string name="action_location">Location</string>
     <string name="action_voice">Voice</string>
@@ -12,4 +14,27 @@
     <string name="support_development">Support development</string>
     <string name="settings">Settings</string>
     <string name="about">About</string>
+
+    <!--Preference strings-->
+    <string name="pref_user_key">user_name</string>
+    <string name="pref_user_title">Your Name</string>
+    <string name="pref_user_summary">A username for a special snowflake</string>
+    <string name="pref_nsfw_key">nsfw_mode</string>
+    <string name="pref_nsfw_title">NSFW Mode</string>
+    <string name="pref_nsfw_summary">Toggle potentially NSFW prompts for your Jacket preferences</string>
+    <string name="pref_temp_key">temp_unit</string>
+    <string name="pref_temp_title">Temperature Unit</string>
+
+    <string-array name="pref_temp_options">
+        <item>Fahrenheit</item>
+        <item>Celsius</item>
+        <item>Kelvin</item>
+    </string-array>
+
+    <string-array name="pref_temp_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
 </resources>

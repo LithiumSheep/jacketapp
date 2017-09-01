@@ -64,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
                 searchView.swapSuggestions(list);*/
             }
         });
+
+        searchView.attachNavigationDrawerToMenuButton(drawer.getDrawerLayout());
     }
 
     private void getWeather() {
