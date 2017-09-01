@@ -17,4 +17,9 @@ public class Wind {
     public float getDegrees() {
         return degrees;
     }
+
+    // TODO: Add direction decoding.
+    /*public enum DIRECTION {
+        N, NE, E, SE, S, SW, W, NW
+    }*/
 }
