@@ -1,4 +1,4 @@
-package com.dustbowl.jacketapp;
+package com.lithiumsheep.jacketapp;
 
 import org.junit.Test;
 
