@@ -25,7 +25,7 @@ public abstract class WeatherCallback implements Callback {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                onFailure(e);
+                onFailure(new Error(e.getMessage()));
             }
         });
     }
@@ -47,13 +47,13 @@ public abstract class WeatherCallback implements Callback {
                 onFailure(call, e);
             }
         } else {
-            JsonAdapter<WeatherError> jsonAdapter = moshi.adapter(WeatherError.class);
+            JsonAdapter<Error> jsonAdapter = moshi.adapter(Error.class);
             try {
-                final WeatherError error = jsonAdapter.fromJson(response.body().string());
+                final Error error = jsonAdapter.fromJson(response.body().string());
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
-                        onFailure(new RuntimeException(error.getMessage()));
+                        onFailure(error);
                     }
                 });
             } catch (IOException e) {
@@ -62,6 +62,19 @@ public abstract class WeatherCallback implements Callback {
         }
     }
 
-    public abstract void onFailure(Exception exception);
+    public abstract void onFailure(Error error);    // used to be Exception exception
     public abstract void onSuccess(CurrentWeather currentWeather);
+
+    // TODO: Use Error class instead of WeatherError
+    public static class Error {
+        private String message;
+
+        public Error(String message) {
+            this.message = message;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+    }
 }
