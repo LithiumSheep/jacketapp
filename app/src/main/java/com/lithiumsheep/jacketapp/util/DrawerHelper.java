@@ -1,6 +1,5 @@
 package com.lithiumsheep.jacketapp.util;
 
-import static java.lang.Math.toIntExact;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
