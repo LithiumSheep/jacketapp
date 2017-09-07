@@ -35,7 +35,7 @@ public class WeatherWrapper {
         new LocationManager(context).getLastLocation(new LocationCallback() {
             @Override
             public void onError(Exception exception) {
-                weatherCallback.onFailure(exception);
+                weatherCallback.onFailure(new WeatherCallback.Error(exception.getMessage()));
             }
 
             @Override

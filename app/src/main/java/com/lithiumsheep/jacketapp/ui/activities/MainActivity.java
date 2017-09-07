@@ -58,10 +58,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSearchTextChanged(String oldQuery, String newQuery) {
                 Timber.d("%s changed to %s", oldQuery, newQuery);
-                /*Suggestion s = new Suggestion(newQuery);
-                List<Suggestion> list = new ArrayList<>();
-                list.add(s);
-                searchView.swapSuggestions(list);*/
             }
         });
 
@@ -86,10 +82,10 @@ public class MainActivity extends AppCompatActivity {
         locText.setText(R.string.loading);
         WeatherWrapper.getWeatherForCurrentLocation(this, new WeatherCallback() {
             @Override
-            public void onFailure(Exception exception) {
-                Timber.e(exception.getMessage());
+            public void onFailure(Error error) {
+                Timber.e(error.getMessage());
                 Toast.makeText(MainActivity.this,
-                        exception.getMessage(), Toast.LENGTH_LONG).show();
+                        error.getMessage(), Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -104,10 +100,10 @@ public class MainActivity extends AppCompatActivity {
     private void performWeatherRequestByZip(String zipCode) {
         WeatherWrapper.getWeatherByZip(zipCode, new WeatherCallback() {
             @Override
-            public void onFailure(Exception exception) {
-                Timber.e(exception.getMessage());
+            public void onFailure(Error error) {
+                Timber.e(error.getMessage());
                 Toast.makeText(MainActivity.this,
-                        exception.getMessage(), Toast.LENGTH_LONG).show();
+                        error.getMessage(), Toast.LENGTH_LONG).show();
             }
 
             @Override
