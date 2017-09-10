@@ -14,7 +14,7 @@ public class Weather {
     private String description;
 
     @Json(name="icon")
-    private String name;
+    private String icon;
 
     public int getId() {
         return id;
@@ -28,7 +28,7 @@ public class Weather {
         return description;
     }
 
-    public String getName() {
-        return name;
+    public String getIcon() {
+        return icon;
     }
 }
