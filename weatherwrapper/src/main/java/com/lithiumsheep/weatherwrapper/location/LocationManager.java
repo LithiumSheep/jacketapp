@@ -4,10 +4,13 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.location.Location;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 public class LocationManager {
@@ -31,7 +34,8 @@ public class LocationManager {
                         if (task.isSuccessful() && task.getResult() != null) {
                             callback.onLocationSuccess(task.getResult());
                         } else {
-                            callback.onError(task.getException());
+                            // TODO: But why is it null sometimes?
+                            callback.onError(new Exception("Failed to get Location - Location was null"));
                         }
                     }
                 });

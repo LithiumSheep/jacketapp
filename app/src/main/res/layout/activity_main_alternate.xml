@@ -32,6 +32,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
+            android:id="@+id/view_group"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
@@ -43,6 +44,14 @@
                 android:layout_height="wrap_content"
                 android:padding="16dp"
                 tools:text="Last loc unknown" />
+
+            <ProgressBar
+                android:id="@+id/main_progress"
+                style="@style/Widget.AppCompat.ProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                tools:visibility="visible"/>
 
         </LinearLayout>
 

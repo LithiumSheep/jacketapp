@@ -3,9 +3,14 @@ package com.lithiumsheep.jacketapp.ui.activities;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.transition.TransitionManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,8 +34,12 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.floating_search_view)
     FloatingSearchView searchView;
+    @BindView(R.id.view_group)
+    ViewGroup viewGroup;
     @BindView(R.id.loc_text)
     TextView locText;
+    @BindView(R.id.main_progress)
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +54,8 @@ public class MainActivity extends AppCompatActivity {
             public void onActionMenuItemSelected(MenuItem item) {
                 if (item.getItemId() == R.id.action_search) {
                     // check if last location exists on disk, if yes ask to continue
-                    getWeather();
+                    getWeatherBySearch();
                 } else if (item.getItemId() == R.id.action_location) {
-
                     getWeatherByLocation();
                 }
             }
@@ -63,7 +71,8 @@ public class MainActivity extends AppCompatActivity {
         searchView.attachNavigationDrawerToMenuButton(drawer.getDrawerLayout());
     }
 
-    private void getWeather() {
+    private void getWeatherBySearch() {
+        setText(true, null);
         performWeatherRequestByZip(searchView.getQuery());
     }
 
@@ -78,20 +87,21 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("MissingPermission")
     private void performLocationRequestForWeather() {
-        locText.setText(R.string.loading);
+        setText(true, null);
         WeatherWrapper.getWeatherForCurrentLocation(this, new WeatherCallback() {
             @Override
             public void onFailure(Error error) {
                 Timber.e(error.getMessage());
                 Toast.makeText(MainActivity.this,
                         error.getMessage(), Toast.LENGTH_LONG).show();
+                setText(false, null);
             }
 
             @Override
             public void onSuccess(CurrentWeather currentWeather) {
                 Toast.makeText(MainActivity.this,
                         "Success!", Toast.LENGTH_SHORT).show();
-                setText(currentWeather);
+                setText(false, currentWeather);
             }
         });
     }
@@ -103,22 +113,35 @@ public class MainActivity extends AppCompatActivity {
                 Timber.e(error.getMessage());
                 Toast.makeText(MainActivity.this,
                         error.getMessage(), Toast.LENGTH_LONG).show();
+                setText(false, null);
             }
 
             @Override
             public void onSuccess(CurrentWeather currentWeather) {
                 Toast.makeText(MainActivity.this,
                         "Success!", Toast.LENGTH_SHORT).show();
-                setText(currentWeather);
+                setText(false, currentWeather);
             }
         });
     }
 
-    private void setText(CurrentWeather currentWeather) {
-        locText.setText(currentWeather.toString()
-                .concat("\n").concat(BuildConfig.APPLICATION_ID)
-                .concat("\n").concat(BuildConfig.VERSION_NAME)
-        );
+    private void setText(boolean loading, @Nullable CurrentWeather currentWeather) {
+        // TODO: How to crossfade?
+        if (loading) {
+            locText.setVisibility(View.GONE);
+            progressBar.setVisibility(View.VISIBLE);
+        } else {
+            progressBar.setVisibility(View.GONE);
+            locText.setVisibility(View.VISIBLE);
+            if (currentWeather != null) {
+                locText.setText(currentWeather.toString()
+                        .concat("\n").concat(BuildConfig.APPLICATION_ID)
+                        .concat("\n").concat(BuildConfig.VERSION_NAME)
+                );
+            } else {
+                locText.setText("Error! CurrentWeather is null!");
+            }
+        }
     }
 
     @Override
@@ -128,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
             if (grantResults.length <= 0) {
                 Timber.w("Location request was interrupted (by user?)");
             } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                getWeather();   // TODO: is this messed up?
+                getWeatherByLocation();   // TODO: is this messed up?
             } else {
                 Timber.d("Location requested denied by user");
             }
