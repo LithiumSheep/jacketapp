@@ -47,8 +47,7 @@ public class MainActivity extends AppCompatActivity {
                     // check if last location exists on disk, if yes ask to continue
                     getWeather();
                 } else if (item.getItemId() == R.id.action_location) {
-                    /*Intent intent = new Intent(MainActivity.this, SplashActivity.class);
-                    startActivity(intent);*/
+
                     getWeatherByLocation();
                 }
             }
