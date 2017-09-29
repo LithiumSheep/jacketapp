@@ -37,6 +37,7 @@
 
         <activity android:name=".ui.activities.MultiTransitionActivity" />
         <activity android:name=".ui.activities.MultiTransitionEndActivity" />
+        <activity android:name=".ui.activities.BottomSheetActivity" />
 
     </application>
 

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.View;
 
 import com.lithiumsheep.jacketapp.R;
+import com.lithiumsheep.jacketapp.ui.activities.BottomSheetActivity;
 import com.lithiumsheep.jacketapp.ui.activities.MultiTransitionActivity;
 import com.lithiumsheep.jacketapp.ui.activities.SettingsActivity;
 import com.lithiumsheep.jacketapp.ui.activities.TransitionActivity;
@@ -37,6 +38,8 @@ public class DrawerHelper {
                         new SecondaryDrawerItem().withTag(5).withName(R.string.test_animation)
                                 .withIcon(CommunityMaterial.Icon.cmd_test_tube).withSelectable(false),
                         new SecondaryDrawerItem().withTag(6).withName(R.string.test_transition)
+                                .withIcon(CommunityMaterial.Icon.cmd_android_debug_bridge).withSelectable(false),
+                        new SecondaryDrawerItem().withTag(7).withName(R.string.test_bottom_sheet)
                                 .withIcon(CommunityMaterial.Icon.cmd_android_debug_bridge).withSelectable(false)
                 )
                 .withSelectedItem(0)
@@ -63,6 +66,9 @@ public class DrawerHelper {
                                 return false;
                             case 6:
                                 activity.startActivity(new Intent(activity, MultiTransitionActivity.class));
+                                return false;
+                            case 7:
+                                activity.startActivity(new Intent(activity, BottomSheetActivity.class));
                                 return false;
                             default:
                                 return false;

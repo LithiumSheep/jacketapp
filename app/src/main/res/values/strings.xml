@@ -41,8 +41,15 @@
         <item>2</item>
     </string-array>
 
+    <!--Lorem Ipsum-->
+    <string name="lorem_ipsum">Lorem Ipsum</string>
+    <string name="lorem_ipsum_short">Lorem ipsum dolor sit amet</string>
+    <string name="lorem_ipsum_line">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</string>
+    <string name="lorem_ipsum_paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed lobortis nibh arcu, eget tempus lacus consequat vel. Donec luctus tincidunt erat, ac eleifend sapien elementum pulvinar. Donec nec ipsum ultricies, finibus mauris at, consectetur est. Curabitur tempor ex eget elit efficitur iaculis. Ut tristique molestie est, eget semper leo faucibus hendrerit. Phasellus vel varius erat. Aliquam sit amet condimentum sapien. Nulla tristique, elit laoreet venenatis euismod, velit neque tempus eros, in malesuada diam sem facilisis purus. Sed dapibus, ipsum eget tempus fringilla, arcu elit elementum lectus, volutpat rhoncus ligula neque ac velit. Maecenas sapien enim, ornare sed magna id, bibendum auctor enim. Praesent vestibulum lacinia eleifend.</string>
+
     <!--Test/Mock-->
     <string name="test_animation">Testing single element</string>
     <string name="test_transition">Testing multiple shared elements</string>
+    <string name="test_bottom_sheet">Testing Bottom Sheet</string>
 
 </resources>
