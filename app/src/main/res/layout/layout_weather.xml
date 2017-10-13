@@ -6,22 +6,20 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <ImageView
+    <com.mikepenz.iconics.view.IconicsImageView
+        android:id="@+id/weather_icon"
         android:layout_width="120dp"
         android:layout_height="120dp"
-        android:src="@android:drawable/ic_menu_mylocation" />
-
-    <com.mikepenz.iconics.view.IconicsImageView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        tools:visbility="false" />
+        tools:visbility="gone" />
 
     <TextView
+        android:id="@+id/weather_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="weather title" />
 
     <TextView
+        android:id="@+id/weather_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="flavor description" />
