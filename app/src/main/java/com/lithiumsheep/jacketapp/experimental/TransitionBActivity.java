@@ -1,4 +1,4 @@
-package com.lithiumsheep.jacketapp.ui.activities;
+package com.lithiumsheep.jacketapp.experimental;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +11,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MultiTransitionEndActivity extends AppCompatActivity {
+public class TransitionBActivity extends AppCompatActivity {
 
     @BindView(R.id.image)
     ImageView imageView;
@@ -19,7 +19,7 @@ public class MultiTransitionEndActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_transition_end);
+        setContentView(R.layout.activity_image_top);
         ButterKnife.bind(this);
 
         Picasso.with(this)
@@ -28,7 +28,7 @@ public class MultiTransitionEndActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.image)
-    void imageClicked() {
+    void onImageClicked() {
         finishAfterTransition();
     }
 }

@@ -1,12 +1,9 @@
-package com.lithiumsheep.jacketapp.ui.activities;
+package com.lithiumsheep.jacketapp.experimental;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.transition.Fade;
-import android.transition.Transition;
 import android.util.Pair;
 import android.view.View;
 import android.view.Window;

@@ -5,10 +5,10 @@ import android.content.Intent;
 import android.view.View;
 
 import com.lithiumsheep.jacketapp.R;
-import com.lithiumsheep.jacketapp.ui.activities.BottomSheetActivity;
-import com.lithiumsheep.jacketapp.ui.activities.MultiTransitionActivity;
+import com.lithiumsheep.jacketapp.experimental.BottomSheetActivity;
+import com.lithiumsheep.jacketapp.experimental.MultiTransitionActivity;
 import com.lithiumsheep.jacketapp.ui.activities.SettingsActivity;
-import com.lithiumsheep.jacketapp.ui.activities.TransitionActivity;
+import com.lithiumsheep.jacketapp.experimental.TransitionActivity;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;

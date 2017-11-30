@@ -1,4 +1,4 @@
-package com.lithiumsheep.jacketapp.ui.activities;
+package com.lithiumsheep.jacketapp.experimental;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
