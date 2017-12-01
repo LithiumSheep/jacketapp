@@ -8,7 +8,7 @@ import io.reactivex.observers.DisposableObserver;
 import okhttp3.ResponseBody;
 import retrofit2.HttpException;
 
-public abstract class WeatherCallback<T> extends DisposableObserver<T> {
+public abstract class WeatherObservableCallback<T> extends DisposableObserver<T> {
 
     @Override
     public void onNext(T t) {
