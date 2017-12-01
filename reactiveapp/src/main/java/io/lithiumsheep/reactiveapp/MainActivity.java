@@ -15,11 +15,24 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        WeatherLib.getCurrentWeather("Seattle")
+        /*WeatherLib.getCurrentWeather("Seattle")
                 .enqueue(new NetworkCallback<CurrentWeather>() {
                     @Override
                     protected void onSuccess(CurrentWeather response) {
-                        Timber.d("Success");
+                        //Timber.d("Success");
+                    }
+
+                    @Override
+                    protected void onError(Error error) {
+                        Timber.w(error.getMessage());
+                    }
+                });*/
+
+        WeatherLib.getWeatherZip("22202")
+                .enqueue(new NetworkCallback<Void>() {
+                    @Override
+                    protected void onSuccess(Void response) {
+                        Timber.d("What is response: %s", response);
                     }
 
                     @Override

@@ -18,4 +18,8 @@ public class WeatherLib {
     public static Call<CurrentWeather> getCurrentWeather(String cityOrZip) {
         return HttpClient.getService().getCurrentWeather(cityOrZip);
     }
+
+    public static Call<Void> getWeatherZip(String zip) {
+        return HttpClient.getService().getWeatherByZip(zip);
+    }
 }

@@ -11,5 +11,8 @@ public interface WeatherService {
     Call<CurrentWeather> getCurrentWeather(@Query("q") String cityOrZip);
 
     @GET("data/2.5/weather")
+    Call<Void> getWeatherByZip(@Query("zip") String zip);
+
+    @GET("data/2.5/weather")
     Call<CurrentWeather> getCurrentWeather(@Query("lat") Double lat, @Query("lon") Double lon);
 }
