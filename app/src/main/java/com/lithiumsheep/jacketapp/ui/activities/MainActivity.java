@@ -1,30 +1,28 @@
 package com.lithiumsheep.jacketapp.ui.activities;
 
 import android.annotation.SuppressLint;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
-import com.lithiumsheep.jacketapp.BuildConfig;
 import com.lithiumsheep.jacketapp.R;
 import com.lithiumsheep.jacketapp.util.DrawerHelper;
 import com.lithiumsheep.jacketapp.util.PermissionUtil;
-import com.lithiumsheep.weatherwrapper.WeatherWrapper;
-import com.lithiumsheep.weatherwrapper.models.CurrentWeather;
-import com.lithiumsheep.weatherwrapper.api.WeatherCallback;
+import com.lithiumsheep.jacketapp.viewmodel.WeatherViewModel;
 import com.mikepenz.materialdrawer.Drawer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.lithiumsheep.weatherlib.models.CurrentWeather;
 import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
@@ -40,11 +38,25 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.main_progress)
     ProgressBar progressBar;
 
+    WeatherViewModel weatherViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_alternate);
         ButterKnife.bind(this);
+
+        weatherViewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
+        weatherViewModel.getData().observe(this, new Observer<CurrentWeather>() {
+            @Override
+            public void onChanged(@Nullable CurrentWeather currentWeather) {
+                if (currentWeather  != null) {
+                    locText.setText(currentWeather.getName());
+                } else {
+                    Timber.w("currentWeather came back null");
+                }
+            }
+        });
 
         Drawer drawer = DrawerHelper.attach(this);
 
@@ -53,7 +65,9 @@ public class MainActivity extends AppCompatActivity {
             public void onActionMenuItemSelected(MenuItem item) {
                 if (item.getItemId() == R.id.action_search) {
                     // check if last location exists on disk, if yes ask to continue
-                    getWeatherBySearch();
+                    //getWeatherBySearch();
+                    //weatherBySearch(searchView.getQuery());
+                    weatherViewModel.fetchWeather(searchView.getQuery());
                 } else if (item.getItemId() == R.id.action_location) {
                     getWeatherByLocation();
                 }
@@ -70,10 +84,6 @@ public class MainActivity extends AppCompatActivity {
         searchView.attachNavigationDrawerToMenuButton(drawer.getDrawerLayout());
     }
 
-    private void getWeatherBySearch() {
-        setText(true, null);
-        performWeatherRequestByZip(searchView.getQuery());
-    }
 
     private void getWeatherByLocation() {
         if (!PermissionUtil.hasLocationPermission(this)) {
@@ -86,61 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("MissingPermission")
     private void performLocationRequestForWeather() {
-        setText(true, null);
-        WeatherWrapper.getWeatherForCurrentLocation(this, new WeatherCallback() {
-            @Override
-            public void onFailure(Error error) {
-                Timber.e(error.getMessage());
-                Toast.makeText(MainActivity.this,
-                        error.getMessage(), Toast.LENGTH_LONG).show();
-                setText(false, null);
-            }
 
-            @Override
-            public void onSuccess(CurrentWeather currentWeather) {
-                Toast.makeText(MainActivity.this,
-                        "Success!", Toast.LENGTH_SHORT).show();
-                setText(false, currentWeather);
-            }
-        });
-    }
-
-    private void performWeatherRequestByZip(String zipCode) {
-        WeatherWrapper.getWeatherByZip(zipCode, new WeatherCallback() {
-            @Override
-            public void onFailure(Error error) {
-                Timber.e(error.getMessage());
-                Toast.makeText(MainActivity.this,
-                        error.getMessage(), Toast.LENGTH_LONG).show();
-                setText(false, null);
-            }
-
-            @Override
-            public void onSuccess(CurrentWeather currentWeather) {
-                Toast.makeText(MainActivity.this,
-                        "Success!", Toast.LENGTH_SHORT).show();
-                setText(false, currentWeather);
-            }
-        });
-    }
-
-    private void setText(boolean loading, @Nullable CurrentWeather currentWeather) {
-        // TODO: How to crossfade?
-        if (loading) {
-            locText.setVisibility(View.GONE);
-            progressBar.setVisibility(View.VISIBLE);
-        } else {
-            progressBar.setVisibility(View.GONE);
-            locText.setVisibility(View.VISIBLE);
-            if (currentWeather != null) {
-                locText.setText(currentWeather.toString()
-                        .concat("\n").concat(BuildConfig.APPLICATION_ID)
-                        .concat("\n").concat(BuildConfig.VERSION_NAME)
-                );
-            } else {
-                locText.setText("Error! CurrentWeather is null!");
-            }
-        }
     }
 
     @Override
@@ -150,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
             if (grantResults.length <= 0) {
                 Timber.w("Location request was interrupted (by user?)");
             } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                getWeatherByLocation();   // TODO: is this messed up?
+                // granted
             } else {
                 Timber.d("Location requested denied by user");
             }

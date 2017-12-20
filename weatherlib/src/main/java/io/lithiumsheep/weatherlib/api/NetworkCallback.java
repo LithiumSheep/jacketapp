@@ -47,7 +47,6 @@ public abstract class NetworkCallback<T> implements Callback<T> {
         transient Throwable throwable;
 
         private String message;
-        private String state;
 
         Error(Throwable throwable) {
             this(throwable, null);
@@ -60,10 +59,6 @@ public abstract class NetworkCallback<T> implements Callback<T> {
 
         public String getMessage() {
             return this.message;
-        }
-
-        public String getState() {
-            return this.state;
         }
 
         private String parseErrorMessage(Throwable throwable, @Nullable Response response) {
