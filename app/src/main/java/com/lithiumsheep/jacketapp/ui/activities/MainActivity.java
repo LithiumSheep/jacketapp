@@ -14,7 +14,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.AutocompletePredictionBufferResponse;
+import com.google.android.gms.location.places.GeoDataClient;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.lithiumsheep.jacketapp.R;
+import com.lithiumsheep.jacketapp.models.search.PlaceSuggestion;
 import com.lithiumsheep.jacketapp.util.DrawerHelper;
 import com.lithiumsheep.jacketapp.util.PermissionUtil;
 import com.lithiumsheep.jacketapp.viewmodel.WeatherViewModel;
@@ -40,11 +50,22 @@ public class MainActivity extends AppCompatActivity {
 
     WeatherViewModel weatherViewModel;
 
+    GeoDataClient client;
+    LatLngBounds defaultBounds;
+    AutocompleteFilter defaultFilter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_alternate);
         ButterKnife.bind(this);
+
+        client = Places.getGeoDataClient(this, null);
+        //defaultBounds = new LatLngBounds.Builder().build();
+        defaultFilter = new AutocompleteFilter.Builder()
+                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
+                .setCountry("USA")
+                .build();
 
         weatherViewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
         weatherViewModel.getData().observe(this, new Observer<CurrentWeather>() {
@@ -78,6 +99,32 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSearchTextChanged(String oldQuery, String newQuery) {
                 Timber.d("%s changed to %s", oldQuery, newQuery);
+
+                if (!oldQuery.equals("") && newQuery.equals("")) {
+                    searchView.clearSuggestions();
+                } else {
+                    searchView.showProgress();
+                    client.getAutocompletePredictions(newQuery, null, defaultFilter)
+                            .addOnSuccessListener(new OnSuccessListener<AutocompletePredictionBufferResponse>() {
+                                @Override
+                                public void onSuccess(AutocompletePredictionBufferResponse autocompletePredictions) {
+                                    Timber.d("Predictions count: %s", autocompletePredictions.getCount());
+                                    Timber.d("Suggestion 1 %s", PlaceSuggestion.of(autocompletePredictions).get(0).getBody());
+                                    searchView.swapSuggestions(PlaceSuggestion.of(autocompletePredictions));
+                                }
+                            }).addOnCompleteListener(new OnCompleteListener<AutocompletePredictionBufferResponse>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AutocompletePredictionBufferResponse> task) {
+                            searchView.hideProgress();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Timber.e(e);
+                        }
+                    });
+                }
+
             }
         });
 

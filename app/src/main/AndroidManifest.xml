@@ -39,6 +39,10 @@
         <activity android:name=".experimental.MultiTransitionEndActivity" />
         <activity android:name=".experimental.BottomSheetActivity" />
 
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyC1Y6YT5rXcTD1QeLEG0m8UFt4_3B1LaEQ"/>
+
     </application>
 
 </manifest>
