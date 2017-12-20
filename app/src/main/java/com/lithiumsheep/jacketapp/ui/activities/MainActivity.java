@@ -108,8 +108,8 @@ public class MainActivity extends AppCompatActivity {
                             .addOnSuccessListener(new OnSuccessListener<AutocompletePredictionBufferResponse>() {
                                 @Override
                                 public void onSuccess(AutocompletePredictionBufferResponse autocompletePredictions) {
-                                    Timber.d("Predictions count: %s", autocompletePredictions.getCount());
-                                    Timber.d("Suggestion 1 %s", PlaceSuggestion.of(autocompletePredictions).get(0).getBody());
+                                    //Timber.d("Predictions count: %s", autocompletePredictions.getCount());
+                                    //Timber.d("Suggestion 1 %s", PlaceSuggestion.of(autocompletePredictions).get(0).getBody());
                                     searchView.swapSuggestions(PlaceSuggestion.of(autocompletePredictions));
                                 }
                             }).addOnCompleteListener(new OnCompleteListener<AutocompletePredictionBufferResponse>() {
@@ -130,7 +130,6 @@ public class MainActivity extends AppCompatActivity {
 
         searchView.attachNavigationDrawerToMenuButton(drawer.getDrawerLayout());
     }
-
 
     private void getWeatherByLocation() {
         if (!PermissionUtil.hasLocationPermission(this)) {

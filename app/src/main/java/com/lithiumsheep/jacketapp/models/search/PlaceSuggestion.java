@@ -3,10 +3,12 @@ package com.lithiumsheep.jacketapp.models.search;
 import android.os.Parcel;
 
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
+import com.google.android.gms.location.places.AutocompletePrediction;
 import com.google.android.gms.location.places.AutocompletePredictionBufferResponse;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 public class PlaceSuggestion implements SearchSuggestion {
@@ -58,7 +60,7 @@ public class PlaceSuggestion implements SearchSuggestion {
             list = Collections.emptyList();
         } else {
             list = new ArrayList<>();
-            if (response.getCount() >= 3) {
+            /*if (response.getCount() >= 3) {
                 for (int i = 0; i < 3; i++) {
                     list.add(new PlaceSuggestion(response.get(i).getFullText(null).toString()));
                 }
@@ -66,8 +68,20 @@ public class PlaceSuggestion implements SearchSuggestion {
                 for (int i = 0; i < response.getCount(); i++) {
                     list.add(new PlaceSuggestion(response.get(i).getFullText(null).toString()));
                 }
+            }*/
+            for (AutocompletePrediction aResponse : response) {
+                list.add(new PlaceSuggestion(aResponse.getFullText(null).toString()));
             }
+            response.release();
         }
+        return list;
+    }
+
+    public static List<PlaceSuggestion> mock() {
+        List<PlaceSuggestion> list = new ArrayList<>();
+        list.add(new PlaceSuggestion("Blah"));
+        list.add(new PlaceSuggestion("Bork"));
+        list.add(new PlaceSuggestion("Snerk"));
         return list;
     }
 }
