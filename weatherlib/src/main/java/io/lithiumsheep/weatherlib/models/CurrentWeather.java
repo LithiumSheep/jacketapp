@@ -11,4 +11,28 @@ public class CurrentWeather {
 
     private String id;
     private String name;
+
+    public Coord getCoord() {
+        return coord;
+    }
+
+    public String getBase() {
+        return base;
+    }
+
+    public Wind getWind() {
+        return wind;
+    }
+
+    public Clouds getClouds() {
+        return clouds;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
 }

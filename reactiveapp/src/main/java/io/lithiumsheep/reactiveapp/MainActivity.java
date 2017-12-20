@@ -6,6 +6,9 @@ import android.os.Bundle;
 import io.lithiumsheep.weatherlib.WeatherLib;
 import io.lithiumsheep.weatherlib.api.NetworkCallback;
 import io.lithiumsheep.weatherlib.models.CurrentWeather;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
@@ -28,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });*/
 
-        WeatherLib.getWeatherZip("22202")
+        /*WeatherLib.getWeatherZip("22202")
                 .enqueue(new NetworkCallback<Void>() {
                     @Override
                     protected void onSuccess(Void response) {
@@ -38,6 +41,29 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     protected void onError(Error error) {
                         Timber.w(error.getMessage());
+                    }
+                });*/
+
+        WeatherLib.getObservableCurrentWeather("98006")
+                .subscribe(new Observer<CurrentWeather>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(CurrentWeather currentWeather) {
+                        Timber.d(currentWeather.getName());
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Timber.d("Complete");
                     }
                 });
     }

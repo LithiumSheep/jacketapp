@@ -44,9 +44,6 @@ public class HttpClient {
                     .client(new OkHttpClient.Builder()
                             .addInterceptor(new AppIdInterceptor())
                             .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
-                            .connectTimeout(10, TimeUnit.SECONDS)
-                            .readTimeout(10, TimeUnit.SECONDS)
-                            .writeTimeout(10, TimeUnit.SECONDS)
                             .build())
                     .build()
                     .create(WeatherService.class);

@@ -8,7 +8,7 @@ import retrofit2.http.Query;
 public interface WeatherObservableService {
 
     @GET("data/2.5/weather")
-    Observable<CurrentWeather> getCurrentWeather(@Query("q") String cityOrZip);
+    Observable<CurrentWeather> getCurrentWeather(@Query("zip") String cityOrZip);
 
     @GET("data/2.5/weather")
     Observable<CurrentWeather> getCurrentWeather(@Query("lat") Double lat, @Query("lon") Double lon);
