@@ -1,10 +1,11 @@
-package io.lithiumsheep.reactiveapp;
+package io.lithiumsheep.reactiveapp.ui;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+import io.lithiumsheep.reactiveapp.R;
 import io.lithiumsheep.reactiveapp.viewmodel.WeatherViewModel;
 import io.lithiumsheep.weatherlib.models.CurrentWeather;
 import timber.log.Timber;

@@ -20,7 +20,7 @@ public class HttpClient {
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY)
-    public static WeatherObservableService getObservableService() {
+    private static WeatherObservableService getObservableService() {
         if (observableService == null) {
             observableService = new Retrofit.Builder()
                     .baseUrl(baseUrl())
