@@ -51,8 +51,9 @@ public class MainActivity extends AppCompatActivity {
     WeatherViewModel weatherViewModel;
 
     GeoDataClient client;
-    LatLngBounds defaultBounds;
     AutocompleteFilter defaultFilter;
+
+    boolean disableAutocomplete = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +61,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_alternate);
         ButterKnife.bind(this);
 
+        Drawer drawer = DrawerHelper.attach(this);
+
         client = Places.getGeoDataClient(this, null);
-        //defaultBounds = new LatLngBounds.Builder().build();
         defaultFilter = new AutocompleteFilter.Builder()
                 .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
                 .setCountry("USA")
@@ -72,14 +74,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable CurrentWeather currentWeather) {
                 if (currentWeather  != null) {
-                    locText.setText(currentWeather.getName());
+                    updateUi(currentWeather);
                 } else {
                     Timber.w("currentWeather came back null");
                 }
             }
         });
-
-        Drawer drawer = DrawerHelper.attach(this);
 
         searchView.setOnMenuItemClickListener(new FloatingSearchView.OnMenuItemClickListener() {
             @Override
@@ -99,6 +99,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSearchTextChanged(String oldQuery, String newQuery) {
                 Timber.d("%s changed to %s", oldQuery, newQuery);
+
+                if (disableAutocomplete) {
+                    return;
+                }
 
                 if (!oldQuery.equals("") && newQuery.equals("")) {
                     searchView.clearSuggestions();
@@ -124,7 +128,6 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                 }
-
             }
         });
 
@@ -143,6 +146,10 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("MissingPermission")
     private void performLocationRequestForWeather() {
 
+    }
+
+    private void updateUi(CurrentWeather weather) {
+        locText.setText(weather.getName());
     }
 
     @Override

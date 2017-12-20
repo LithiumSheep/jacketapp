@@ -7,7 +7,6 @@ import android.arch.lifecycle.ViewModel;
 import com.lithiumsheep.jacketapp.util.Validator;
 
 import io.lithiumsheep.weatherlib.WeatherLib;
-import io.lithiumsheep.weatherlib.api.HttpClient;
 import io.lithiumsheep.weatherlib.models.CurrentWeather;
 import timber.log.Timber;
 
@@ -24,11 +23,15 @@ public class WeatherViewModel extends ViewModel {
     }
 
     // called after getData() for observing
-    public void fetchWeather(String query) {
+    public void fetchWeather(final String query) {
+        lastQuery = query;
         if (Validator.matchesZip(query)) {
             WeatherLib.getWeatherByZip(query, new WeatherLib.Callback<CurrentWeather>() {
                 @Override
                 public void onSuccess(CurrentWeather response) {
+                    if (!query.equals(lastQuery)) {
+                        return;
+                    }
                     data.setValue(response);
                 }
 
@@ -42,6 +45,9 @@ public class WeatherViewModel extends ViewModel {
             WeatherLib.getWeatherByQuery(query, new WeatherLib.Callback<CurrentWeather>() {
                 @Override
                 public void onSuccess(CurrentWeather response) {
+                    if (!query.equals(lastQuery)) {
+                        return;
+                    }
                     data.setValue(response);
                 }
 
