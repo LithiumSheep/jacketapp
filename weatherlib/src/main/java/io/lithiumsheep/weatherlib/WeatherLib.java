@@ -6,11 +6,11 @@ import retrofit2.Call;
 
 public class WeatherLib {
 
-    public static Call<CurrentWeather> getCurrentWeather(String cityOrZip) {
-        return HttpClient.getService().getCurrentWeather(cityOrZip);
+    public static Call<CurrentWeather> getCurrentWeatherByCity(String city) {
+        return HttpClient.getService().weatherByCity(city);
     }
 
-    public static Call<Void> getWeatherZip(String zip) {
-        return HttpClient.getService().getWeatherByZip(zip);
+    public static Call<CurrentWeather> getWeatherZip(String zip) {
+        return HttpClient.getService().weatherByZip(zip);
     }
 }
