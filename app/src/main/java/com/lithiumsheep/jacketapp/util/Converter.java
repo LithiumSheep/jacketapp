@@ -19,7 +19,7 @@ public class Converter {
 
     /**
      * Convert kevlin value to String with degree symbol
-     * @param kelvin
+     * @param kelvin float representing temperature in Kelvin
      * @return  rounded String value of temperature
      */
     public static String tempForDisplay(float kelvin) {
