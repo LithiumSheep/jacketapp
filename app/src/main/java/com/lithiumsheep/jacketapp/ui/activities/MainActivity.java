@@ -180,6 +180,19 @@ public class MainActivity extends AppCompatActivity {
                     Timber.d("lat %s lon %s", location.getLatitude(), location.getLongitude());
                 }
             }
+        }).addOnFailureListener(this, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Timber.e(e);
+            }
+        }).addOnCompleteListener(this, new OnCompleteListener<Location>() {
+            @Override
+            public void onComplete(@NonNull Task<Location> task) {
+                Timber.d("Location update complete?");
+                Timber.w(task.getException());
+                Timber.d("Complete %s", task.isComplete());
+                Timber.d("Succcessful %s", task.isSuccessful());
+            }
         });
     }
 
@@ -187,8 +200,8 @@ public class MainActivity extends AppCompatActivity {
     private void performLocationRequest() {
         Timber.d("Creating location updates request");
         LocationRequest request = new LocationRequest();
-        request.setInterval(10000);
-        request.setFastestInterval(5000);
+        request.setInterval(10_000);
+        request.setFastestInterval(5_000);
         request.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
         locationClient.requestLocationUpdates(request, new LocationCallback() {
