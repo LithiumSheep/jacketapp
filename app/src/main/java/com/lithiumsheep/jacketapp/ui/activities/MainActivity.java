@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,6 +14,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.AutocompletePredictionBufferResponse;
 import com.google.android.gms.location.places.GeoDataClient;
@@ -69,6 +76,8 @@ public class MainActivity extends AppCompatActivity {
     GeoDataClient client;
     AutocompleteFilter defaultFilter;
 
+    private FusedLocationProviderClient locationClient;
+
     boolean disableAutocomplete = true;
 
     @Override
@@ -84,6 +93,8 @@ public class MainActivity extends AppCompatActivity {
                 .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
                 .setCountry("USA")
                 .build();
+
+        locationClient = LocationServices.getFusedLocationProviderClient(this);
 
         weatherViewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
         weatherViewModel.getData().observe(this, new Observer<CurrentWeather>() {
@@ -102,8 +113,6 @@ public class MainActivity extends AppCompatActivity {
             public void onActionMenuItemSelected(MenuItem item) {
                 if (item.getItemId() == R.id.action_search) {
                     // check if last location exists on disk, if yes ask to continue
-                    //getWeatherBySearch();
-                    //weatherBySearch(searchView.getQuery());
                     weatherViewModel.fetchWeather(searchView.getQuery());
                 } else if (item.getItemId() == R.id.action_location) {
                     getWeatherByLocation();
@@ -155,13 +164,42 @@ public class MainActivity extends AppCompatActivity {
             Timber.d("Requesting location permissions...");
             PermissionUtil.requestLocationPermission(this, LEET_LOCATION_REQUEST_CODE);
         } else {
-            performLocationRequestForWeather();
+            getLastKnownLocation();
         }
     }
 
     @SuppressLint("MissingPermission")
-    private void performLocationRequestForWeather() {
+    private void getLastKnownLocation() {
+        locationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if (location == null) {
+                    Timber.w("Location was null");
+                    performLocationRequest();
+                } else {
+                    Timber.d("lat %s lon %s", location.getLatitude(), location.getLongitude());
+                }
+            }
+        });
+    }
 
+    @SuppressLint("MissingPermission")
+    private void performLocationRequest() {
+        Timber.d("Creating location updates request");
+        LocationRequest request = new LocationRequest();
+        request.setInterval(10000);
+        request.setFastestInterval(5000);
+        request.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+
+        locationClient.requestLocationUpdates(request, new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                Timber.d("Location result came back");
+                for (Location location : locationResult.getLocations()) {
+                    Timber.d("location lat %s lon %s", location.getLatitude(), location.getLongitude());
+                }
+            }
+        }, null);
     }
 
     private void updateUi(CurrentWeather weather) {

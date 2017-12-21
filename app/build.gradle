@@ -77,6 +77,8 @@ dependencies {
 
     // custom views
     // implementation 'com.github.AhmadNemati:WindView:1.1.1'
+    // https://github.com/mancj/MaterialSearchBar
+    // https://github.com/lapism/SearchView
     implementation 'com.github.arimorty:floatingsearchview:2.1.1'
     implementation 'com.squareup.picasso:picasso:2.5.2'
 
