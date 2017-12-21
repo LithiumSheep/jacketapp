@@ -4,8 +4,6 @@ import io.lithiumsheep.weatherlib.api.HttpClient;
 import io.lithiumsheep.weatherlib.api.NetworkCallback;
 import io.lithiumsheep.weatherlib.models.CurrentWeather;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class WeatherLib {
 

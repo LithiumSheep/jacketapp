@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
 
-import timber.log.Timber;
-
 public class StorageUtil {
 
     private static final String LOCATIONS_FILE = "LOCATIONS_FILE";
