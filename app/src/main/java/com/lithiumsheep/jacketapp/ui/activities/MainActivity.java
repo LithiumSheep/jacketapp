@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
         searchView.setOnQueryChangeListener(new FloatingSearchView.OnQueryChangeListener() {
             @Override
             public void onSearchTextChanged(String oldQuery, String newQuery) {
-                Timber.d("%s changed to %s", oldQuery, newQuery);
+                //Timber.d("%s changed to %s", oldQuery, newQuery);
 
                 if (disableAutocomplete) {
                     return;
