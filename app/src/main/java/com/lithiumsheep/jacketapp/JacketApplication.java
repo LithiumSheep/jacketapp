@@ -3,6 +3,7 @@ package com.lithiumsheep.jacketapp;
 
 import android.app.Application;
 
+import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.lithiumsheep.jacketapp.models.Defaults;
 
 import timber.log.Timber;
@@ -14,6 +15,8 @@ public class JacketApplication extends Application {
         super.onCreate();
 
         Timber.plant(new Timber.DebugTree());
+
+        AndroidThreeTen.init(this);
 
         // get Application defaults from preferences
         Defaults userDefaults = new Defaults(this);

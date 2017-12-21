@@ -18,15 +18,16 @@ import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.AutocompletePredictionBufferResponse;
 import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.Places;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.lithiumsheep.jacketapp.R;
 import com.lithiumsheep.jacketapp.models.search.PlaceSuggestion;
+import com.lithiumsheep.jacketapp.util.Converter;
 import com.lithiumsheep.jacketapp.util.DrawerHelper;
 import com.lithiumsheep.jacketapp.util.PermissionUtil;
+import com.lithiumsheep.jacketapp.util.TimeUtil;
 import com.lithiumsheep.jacketapp.viewmodel.WeatherViewModel;
 import com.mikepenz.materialdrawer.Drawer;
 
@@ -43,10 +44,26 @@ public class MainActivity extends AppCompatActivity {
     FloatingSearchView searchView;
     @BindView(R.id.view_group)
     ViewGroup viewGroup;
-    @BindView(R.id.loc_text)
-    TextView locText;
+
+    // using activity_main_alternate
+    /*@BindView(R.id.text)
+    TextView weatherText;
     @BindView(R.id.main_progress)
-    ProgressBar progressBar;
+    ProgressBar progressBar;*/
+
+    // using activity_main
+    @BindView(R.id.weather_time)
+    TextView weatherTime;
+    @BindView(R.id.temperature_high)
+    TextView tempHigh;
+    @BindView(R.id.temperature_low)
+    TextView tempLow;
+    @BindView(R.id.temperature_main)
+    TextView tempMain;
+    @BindView(R.id.weather_text)
+    TextView weatherText;
+    @BindView(R.id.jacket_text)
+    TextView jacketText;
 
     WeatherViewModel weatherViewModel;
 
@@ -58,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_alternate);
+        setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
         Drawer drawer = DrawerHelper.attach(this);
@@ -73,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         weatherViewModel.getData().observe(this, new Observer<CurrentWeather>() {
             @Override
             public void onChanged(@Nullable CurrentWeather currentWeather) {
-                if (currentWeather  != null) {
+                if (currentWeather != null) {
                     updateUi(currentWeather);
                 } else {
                     Timber.w("currentWeather came back null");
@@ -149,7 +166,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateUi(CurrentWeather weather) {
-        locText.setText(weather.getName());
+        weatherTime.setText(TimeUtil.getTimeForNow());
+        tempHigh.setText(Converter.tempForDisplay(weather.getTemperature().getTempMax()));
+        tempLow.setText(Converter.tempForDisplay(weather.getTemperature().getTempMin()));
+        tempMain.setText(Converter.tempForDisplay(weather.getTemperature().getTemp()));
+        weatherText.setText(weather.getWeather().get(0).getDescription());
+        jacketText.setText("It's cold, put a Jacket on!");
     }
 
     @Override
