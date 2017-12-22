@@ -3,17 +3,8 @@ package io.lithiumsheep.weatherlib;
 import io.lithiumsheep.weatherlib.api.HttpClient;
 import io.lithiumsheep.weatherlib.api.NetworkCallback;
 import io.lithiumsheep.weatherlib.models.CurrentWeather;
-import retrofit2.Call;
 
 public class WeatherLib {
-
-    public static Call<CurrentWeather> weatherByCity(String city) {
-        return HttpClient.getService().weatherByCity(city);
-    }
-
-    public static Call<CurrentWeather> weatherByZip(String zip) {
-        return HttpClient.getService().weatherByZip(zip);
-    }
 
     public static void getWeatherByZip(String zip, final Callback<CurrentWeather> callback) {
         HttpClient.getService().weatherByZip(zip).enqueue(new NetworkCallback<CurrentWeather>() {
@@ -46,5 +37,52 @@ public class WeatherLib {
     public interface Callback<T> {
         void onSuccess(T response);
         void onFailure(String reason);
+    }
+
+    public class Config {
+        private String appId;
+        private boolean loggingEnabled;
+
+        private Config() {
+
+        }
+
+        private Config(String appId, boolean loggingEnabled) {
+            this.appId = appId;
+            this.loggingEnabled = loggingEnabled;
+        }
+
+        public String getAppId() {
+            return appId;
+        }
+
+        public boolean isLoggingEnabled() {
+            return loggingEnabled;
+        }
+
+        public class Builder {
+            private String appId;
+            private boolean loggingEnabled;
+
+            public Builder() {
+                // pull from currentConfig?
+                appId = "";
+                loggingEnabled = false;
+            }
+
+            public Builder withAppId(String appId) {
+                this.appId = appId;
+                return this;
+            }
+
+            public Builder withLoggingEnabled(boolean loggingEnabled) {
+                this.loggingEnabled = loggingEnabled;
+                return this;
+            }
+
+            public Config build() {
+                return new Config(appId, loggingEnabled);
+            }
+        }
     }
 }

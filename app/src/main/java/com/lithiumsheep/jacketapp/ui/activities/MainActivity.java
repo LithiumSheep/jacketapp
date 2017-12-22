@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
+import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -78,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
     private FusedLocationProviderClient locationClient;
 
-    boolean disableAutocomplete = true;
+    boolean disableAutocomplete = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,13 +88,13 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         Drawer drawer = DrawerHelper.attach(this);
+        searchView.attachNavigationDrawerToMenuButton(drawer.getDrawerLayout());
 
         client = Places.getGeoDataClient(this, null);
         defaultFilter = new AutocompleteFilter.Builder()
                 .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
                 .setCountry("USA")
                 .build();
-
         locationClient = LocationServices.getFusedLocationProviderClient(this);
 
         weatherViewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
@@ -108,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // menu clicked
         searchView.setOnMenuItemClickListener(new FloatingSearchView.OnMenuItemClickListener() {
             @Override
             public void onActionMenuItemSelected(MenuItem item) {
@@ -120,6 +122,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // keyboard search tapped
+        searchView.setOnSearchListener(new FloatingSearchView.OnSearchListener() {
+            @Override
+            public void onSuggestionClicked(SearchSuggestion searchSuggestion) {
+                Timber.d("Search suggestion clicked %s", searchSuggestion.getBody());
+            }
+
+            @Override
+            public void onSearchAction(String currentQuery) {
+                weatherViewModel.fetchWeather(currentQuery);
+            }
+        });
+
+        // queryChange - only for Google Places Autocomplete API
         searchView.setOnQueryChangeListener(new FloatingSearchView.OnQueryChangeListener() {
             @Override
             public void onSearchTextChanged(String oldQuery, String newQuery) {
@@ -155,8 +171,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
-        searchView.attachNavigationDrawerToMenuButton(drawer.getDrawerLayout());
     }
 
     private void getWeatherByLocation() {
