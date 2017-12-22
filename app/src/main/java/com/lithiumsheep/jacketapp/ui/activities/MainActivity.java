@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
@@ -20,7 +21,6 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.AutocompletePredictionBufferResponse;
 import com.google.android.gms.location.places.GeoDataClient;
@@ -74,13 +74,18 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.jacket_text)
     TextView jacketText;
 
-    WeatherViewModel weatherViewModel;
+    // view and model
+    private Drawer drawer;
+    private WeatherViewModel weatherViewModel;
 
-    GeoDataClient client;
-    AutocompleteFilter defaultFilter;
+    // autocomplete
+    private GeoDataClient client;
+    private AutocompleteFilter defaultFilter;
 
+    // location
     private FusedLocationProviderClient locationClient;
 
+    // debug
     boolean disableAutocomplete = false;
 
     @Override
@@ -89,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        Drawer drawer = DrawerHelper.attach(this);
+        drawer = DrawerHelper.attach(this);
         searchView.attachNavigationDrawerToMenuButton(drawer.getDrawerLayout());
 
         client = Places.getGeoDataClient(this, null);
@@ -106,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
                 if (currentWeather != null) {
                     updateUi(currentWeather);
                 } else {
+                    Toast.makeText(MainActivity.this, "There was a problem fetching your result", Toast.LENGTH_SHORT).show();
                     Timber.w("currentWeather came back null");
                 }
             }
@@ -256,6 +262,15 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 Timber.d("Location requested denied by user");
             }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawer.isDrawerOpen()) {
+            drawer.closeDrawer();
+        } else {
+            super.onBackPressed();
         }
     }
 }
