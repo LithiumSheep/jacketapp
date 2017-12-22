@@ -35,6 +35,7 @@ import com.lithiumsheep.jacketapp.util.Converter;
 import com.lithiumsheep.jacketapp.util.DrawerHelper;
 import com.lithiumsheep.jacketapp.util.PermissionUtil;
 import com.lithiumsheep.jacketapp.util.TimeUtil;
+import com.lithiumsheep.jacketapp.viewmodel.LocationViewModel;
 import com.lithiumsheep.jacketapp.viewmodel.WeatherViewModel;
 import com.mikepenz.materialdrawer.Drawer;
 
@@ -77,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
     // view and model
     private Drawer drawer;
     private WeatherViewModel weatherViewModel;
+    private LocationViewModel locationViewModel;
 
     // autocomplete
     private GeoDataClient client;
@@ -97,12 +99,19 @@ public class MainActivity extends AppCompatActivity {
         drawer = DrawerHelper.attach(this);
         searchView.attachNavigationDrawerToMenuButton(drawer.getDrawerLayout());
 
-        client = Places.getGeoDataClient(this, null);
-        defaultFilter = new AutocompleteFilter.Builder()
-                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
-                .setCountry("USA")
-                .build();
         locationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        locationViewModel = ViewModelProviders.of(this).get(LocationViewModel.class);
+        locationViewModel.getlastKnownLocation(this).observe(this, new Observer<Location>() {
+            @Override
+            public void onChanged(@Nullable Location location) {
+                if (location != null) {
+                    weatherViewModel.fetchWeather(location);
+                } else {
+                    Timber.w("Observed ViewModel location is null");
+                }
+            }
+        });
 
         weatherViewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
         weatherViewModel.getData().observe(this, new Observer<CurrentWeather>() {
@@ -143,6 +152,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        client = Places.getGeoDataClient(this, null);
+        defaultFilter = new AutocompleteFilter.Builder()
+                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
+                .setCountry("USA")
+                .build();
         // queryChange - only for Google Places Autocomplete API
         searchView.setOnQueryChangeListener(new FloatingSearchView.OnQueryChangeListener() {
             @Override
@@ -186,7 +200,8 @@ public class MainActivity extends AppCompatActivity {
             Timber.d("Requesting location permissions...");
             PermissionUtil.requestLocationPermission(this, LEET_LOCATION_REQUEST_CODE);
         } else {
-            getLastKnownLocation();
+            //getLastKnownLocation();
+            locationViewModel.fetchLocation();
         }
     }
 
@@ -258,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
                 Timber.w("Location request was interrupted (by user?)");
             } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // granted
-                getLastKnownLocation();
+                locationViewModel.fetchLocation();
             } else {
                 Timber.d("Location requested denied by user");
             }
