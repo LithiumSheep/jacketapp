@@ -5,10 +5,10 @@ import android.content.Context;
 import android.location.Location;
 import android.support.annotation.RestrictTo;
 
+import com.lithiumsheep.weatherwrapper.api.WeatherApiManager;
+import com.lithiumsheep.weatherwrapper.api.WeatherCallback;
 import com.lithiumsheep.weatherwrapper.location.LocationCallback;
 import com.lithiumsheep.weatherwrapper.location.LocationManager;
-import com.lithiumsheep.weatherwrapper.api.WeatherCallback;
-import com.lithiumsheep.weatherwrapper.api.WeatherApiManager;
 
 
 public class WeatherWrapper {

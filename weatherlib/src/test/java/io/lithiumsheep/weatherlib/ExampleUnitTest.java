@@ -1,4 +1,4 @@
-package com.lithiumsheep.jacketapp;
+package io.lithiumsheep.weatherlib;
 
 import org.junit.Test;
 

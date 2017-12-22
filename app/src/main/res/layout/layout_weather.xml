@@ -3,31 +3,69 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
+    android:layout_margin="16dp"
     android:orientation="vertical">
 
-    <com.mikepenz.iconics.view.IconicsImageView
-        android:id="@+id/weather_icon"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        tools:visbility="gone" />
+    <TextView
+        android:id="@+id/weather_time"
+        style="@style/TextAppearance.AppCompat.Medium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="December 20, 3:30 PM"/>
 
     <TextView
-        android:id="@+id/weather_title"
-        android:layout_width="wrap_content"
+        android:id="@+id/weather_location"
+        style="@style/TextAppearance.AppCompat.Medium"
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="weather title" />
+        tools:text="Seattle, WA"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/temperature_high"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="High temp 40"/>
+
+        <Space
+            android:layout_width="8dp"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/temperature_low"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Low temp 31"/>
+
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/weather_description"
+        android:id="@+id/temperature_main"
+        style="@style/TextAppearance.AppCompat.Display3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="flavor description" />
+        tools:text="39\u00B0F"/>
 
-    <Button
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/weather_text"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="Action" />
+        tools:text="Clouds - Windy"
+        style="@style/TextAppearance.AppCompat.Medium"/>
+
+    <TextView
+        android:id="@+id/jacket_text"
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/TextAppearance.AppCompat.Large"
+        tools:text="Put on yo damn Jacket!"/>
 
 </LinearLayout>
