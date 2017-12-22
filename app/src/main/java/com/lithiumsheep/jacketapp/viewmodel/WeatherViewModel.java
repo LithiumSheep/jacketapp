@@ -16,7 +16,7 @@ public class WeatherViewModel extends ViewModel {
 
     private String lastQuery;
 
-    MutableLiveData<CurrentWeather> data;
+    private MutableLiveData<CurrentWeather> data;
     public LiveData<CurrentWeather> getData() {
         if (data == null) {
             data = new MutableLiveData<>();
