@@ -61,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
     // using activity_main
     @BindView(R.id.weather_time)
     TextView weatherTime;
+    @BindView(R.id.weather_location)
+    TextView weatherLocation;
     @BindView(R.id.temperature_high)
     TextView tempHigh;
     @BindView(R.id.temperature_low)
@@ -192,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
                     performLocationRequest();
                 } else {
                     weatherViewModel.fetchWeather(location);
-                    Timber.d("lat %s lon %s", location.getLatitude(), location.getLongitude());
+                    Timber.d("lastKnownLocation lat %s lon %s", location.getLatitude(), location.getLongitude());
                 }
             }
         }).addOnFailureListener(this, new OnFailureListener() {
@@ -203,12 +205,11 @@ public class MainActivity extends AppCompatActivity {
         }).addOnCompleteListener(this, new OnCompleteListener<Location>() {
             @Override
             public void onComplete(@NonNull Task<Location> task) {
-                Timber.d("Location update complete?");
                 if (task.getException() != null) {
                     Timber.w(task.getException());
                 }
-                Timber.d("Complete %s", task.isComplete());
-                Timber.d("Succcessful %s", task.isSuccessful());
+                Timber.d("lastKnownLocation Complete %s", task.isComplete());
+                Timber.d("lastKnowLocation Succcessful %s", task.isSuccessful());
             }
         });
     }
@@ -224,9 +225,9 @@ public class MainActivity extends AppCompatActivity {
         locationClient.requestLocationUpdates(request, new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
-                Timber.d("Location result came back");
+                Timber.d("LocationRequest result came back");
                 for (Location location : locationResult.getLocations()) {
-                    Timber.d("location lat %s lon %s", location.getLatitude(), location.getLongitude());
+                    Timber.d("LocationRequest lat %s lon %s", location.getLatitude(), location.getLongitude());
                 }
             }
         }, null);
@@ -234,11 +235,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateUi(CurrentWeather weather) {
         weatherTime.setText(TimeUtil.getTimeForNow());
-        tempHigh.setText(Converter.tempForDisplay(weather.getTemperature().getTempMax()));
-        tempLow.setText(Converter.tempForDisplay(weather.getTemperature().getTempMin()));
+        weatherLocation.setText(weather.getName());
+        tempHigh.setText("High " + Converter.tempForDisplay(weather.getTemperature().getTempMax()));
+        tempLow.setText(("Low " + Converter.tempForDisplay(weather.getTemperature().getTempMin())));
         tempMain.setText(Converter.tempForDisplay(weather.getTemperature().getTemp()));
         weatherText.setText(weather.getWeather().get(0).getDescription());
-        jacketText.setText("It's cold, put a Jacket on!");
+
+        // jacketText.setText("It's cold, put a Jacket on!");
     }
 
     @Override
