@@ -34,6 +34,20 @@ public class WeatherLib {
         });
     }
 
+    public static void getWeatherByLatLon(double lat, double lon, final Callback<CurrentWeather> callback) {
+        HttpClient.getService().weatherByLatLon(lat, lon).enqueue(new NetworkCallback<CurrentWeather>() {
+            @Override
+            protected void onSuccess(CurrentWeather response) {
+                callback.onSuccess(response);
+            }
+
+            @Override
+            protected void onError(Error error) {
+                callback.onFailure(error.getMessage());
+            }
+        });
+    }
+
     public interface Callback<T> {
         void onSuccess(T response);
         void onFailure(String reason);

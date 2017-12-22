@@ -191,6 +191,7 @@ public class MainActivity extends AppCompatActivity {
                     Timber.w("Location was null");
                     performLocationRequest();
                 } else {
+                    weatherViewModel.fetchWeather(location);
                     Timber.d("lat %s lon %s", location.getLatitude(), location.getLongitude());
                 }
             }
@@ -203,7 +204,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Location> task) {
                 Timber.d("Location update complete?");
-                Timber.w(task.getException());
+                if (task.getException() != null) {
+                    Timber.w(task.getException());
+                }
                 Timber.d("Complete %s", task.isComplete());
                 Timber.d("Succcessful %s", task.isSuccessful());
             }
@@ -246,6 +249,7 @@ public class MainActivity extends AppCompatActivity {
                 Timber.w("Location request was interrupted (by user?)");
             } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // granted
+                getLastKnownLocation();
             } else {
                 Timber.d("Location requested denied by user");
             }

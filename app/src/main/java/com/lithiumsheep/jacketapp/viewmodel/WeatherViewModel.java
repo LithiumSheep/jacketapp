@@ -3,6 +3,8 @@ package com.lithiumsheep.jacketapp.viewmodel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.location.Location;
+import android.support.annotation.NonNull;
 
 import com.lithiumsheep.jacketapp.util.Validator;
 
@@ -58,5 +60,20 @@ public class WeatherViewModel extends ViewModel {
                 }
             });
         }
+    }
+
+    public void fetchWeather(@NonNull Location location) {
+        WeatherLib.getWeatherByLatLon(location.getLatitude(), location.getLongitude(), new WeatherLib.Callback<CurrentWeather>() {
+            @Override
+            public void onSuccess(CurrentWeather response) {
+                data.setValue(response);
+            }
+
+            @Override
+            public void onFailure(String reason) {
+                Timber.w(reason);
+                data.setValue(null);
+            }
+        });
     }
 }
