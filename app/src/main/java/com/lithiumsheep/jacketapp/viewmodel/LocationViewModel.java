@@ -59,7 +59,7 @@ public class LocationViewModel extends ViewModel {
                 } else {
                     Timber.d("ViewModel location is null, trying to stream location instead");
                     if (isStreamingLocation) {
-                        Timber.w("Location Updates are already queued...no-op");
+                        Timber.w("ViewModel Location Updates are already queued...no-op");
                     } else {
                         streamLocation();
                     }
@@ -101,15 +101,15 @@ public class LocationViewModel extends ViewModel {
 
             @Override
             public void onLocationResult(LocationResult locationResult) {
-                Timber.d("LocationRequest result came back");
+                Timber.d("ViewModel LocationRequest result came back");
                 for (Location location : locationResult.getLocations()) {
                     isStreamingLocation = false;
-                    Timber.d("LocationRequest lat %s lon %s", location.getLatitude(), location.getLongitude());
+                    Timber.d("ViewModel LocationRequest lat %s lon %s", location.getLatitude(), location.getLongitude());
                 }
             }
         };
         locationClient.requestLocationUpdates(request, locationCallback, null);
-        Timber.d("Location Updates queued");
+        Timber.d("ViewModel Location Updates queued");
     }
 
     private void checkLocationSettings(LocationRequest request) {

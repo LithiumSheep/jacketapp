@@ -1,6 +1,5 @@
 package com.lithiumsheep.jacketapp.ui.activities;
 
-import android.annotation.SuppressLint;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.pm.PackageManager;
@@ -16,11 +15,6 @@ import android.widget.Toast;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.AutocompletePredictionBufferResponse;
 import com.google.android.gms.location.places.GeoDataClient;
@@ -84,9 +78,6 @@ public class MainActivity extends AppCompatActivity {
     private GeoDataClient client;
     private AutocompleteFilter defaultFilter;
 
-    // location
-    private FusedLocationProviderClient locationClient;
-
     // debug
     boolean disableAutocomplete = false;
 
@@ -98,8 +89,6 @@ public class MainActivity extends AppCompatActivity {
 
         drawer = DrawerHelper.attach(this);
         searchView.attachNavigationDrawerToMenuButton(drawer.getDrawerLayout());
-
-        locationClient = LocationServices.getFusedLocationProviderClient(this);
 
         locationViewModel = ViewModelProviders.of(this).get(LocationViewModel.class);
         locationViewModel.getlastKnownLocation(this).observe(this, new Observer<Location>() {
@@ -203,55 +192,6 @@ public class MainActivity extends AppCompatActivity {
             //getLastKnownLocation();
             locationViewModel.fetchLocation();
         }
-    }
-
-    @SuppressLint("MissingPermission")
-    private void getLastKnownLocation() {
-        locationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                if (location == null) {
-                    Timber.w("Location was null");
-                    performLocationRequest();
-                } else {
-                    weatherViewModel.fetchWeather(location);
-                    Timber.d("lastKnownLocation lat %s lon %s", location.getLatitude(), location.getLongitude());
-                }
-            }
-        }).addOnFailureListener(this, new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Timber.e(e);
-            }
-        }).addOnCompleteListener(this, new OnCompleteListener<Location>() {
-            @Override
-            public void onComplete(@NonNull Task<Location> task) {
-                if (task.getException() != null) {
-                    Timber.w(task.getException());
-                }
-                Timber.d("lastKnownLocation Complete %s", task.isComplete());
-                Timber.d("lastKnowLocation Succcessful %s", task.isSuccessful());
-            }
-        });
-    }
-
-    @SuppressLint("MissingPermission")
-    private void performLocationRequest() {
-        Timber.d("Creating location updates request");
-        LocationRequest request = new LocationRequest();
-        request.setInterval(10_000);
-        request.setFastestInterval(5_000);
-        request.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-
-        locationClient.requestLocationUpdates(request, new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                Timber.d("LocationRequest result came back");
-                for (Location location : locationResult.getLocations()) {
-                    Timber.d("LocationRequest lat %s lon %s", location.getLatitude(), location.getLongitude());
-                }
-            }
-        }, null);
     }
 
     private void updateUi(CurrentWeather weather) {
