@@ -2,11 +2,7 @@ package com.lithiumsheep.jacketapp.models.weather;
 
 import com.squareup.moshi.Json;
 
-/**
- * Default unit is Kevlin, use the Converter util to convert to other units
- */
-@Deprecated
-public class Temperature {
+public class Metrics {
 
     private float temp;
     @Json(name = "temp_min")

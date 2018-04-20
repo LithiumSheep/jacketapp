@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.lithiumsheep.jacketapp.R;
 import com.lithiumsheep.jacketapp.api.HttpClient;
 import com.lithiumsheep.jacketapp.api.NetworkCallback;
+import com.lithiumsheep.jacketapp.models.weather.CurrentWeather;
 
 public class TestActivity extends AppCompatActivity {
 
@@ -16,9 +17,9 @@ public class TestActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         HttpClient.get().weatherByCity("Arlington")
-                .enqueue(new NetworkCallback<Void>() {
+                .enqueue(new NetworkCallback<CurrentWeather>() {
                     @Override
-                    protected void onSuccess(Void response) {
+                    protected void onSuccess(CurrentWeather response) {
 
                     }
 
