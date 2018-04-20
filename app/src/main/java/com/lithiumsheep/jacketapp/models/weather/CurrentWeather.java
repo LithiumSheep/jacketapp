@@ -8,7 +8,6 @@ public class CurrentWeather {
 
     private Coord coord;
     private List<Weather> weather;
-    private String base;
     @Json(name = "main")
     private Temperature temperature;
     private Wind wind;
@@ -16,6 +15,7 @@ public class CurrentWeather {
 
     private String id;
     private String name;
+    private String dt;  // epoch time of weather
 
     public Coord getCoord() {
         return coord;
@@ -23,10 +23,6 @@ public class CurrentWeather {
 
     public List<Weather> getWeather() {
         return weather;
-    }
-
-    public String getBase() {
-        return base;
     }
 
     public Temperature getTemperature() {

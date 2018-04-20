@@ -17,6 +17,7 @@ public class CredentialInterceptor implements Interceptor {
         HttpUrl url = chain.request().url()
                 .newBuilder()
                 .addQueryParameter("appId", "2f3e06e1d1a7d3ac7eb733be32aef344")
+                .addQueryParameter("units", "imperial")
                 .build();
 
         Request request = chain.request().newBuilder().url(url).build();
