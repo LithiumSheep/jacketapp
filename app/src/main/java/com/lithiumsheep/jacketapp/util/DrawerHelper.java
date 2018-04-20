@@ -5,16 +5,12 @@ import android.content.Intent;
 import android.view.View;
 
 import com.lithiumsheep.jacketapp.R;
-import com.lithiumsheep.jacketapp.experimental.BottomSheetActivity;
-import com.lithiumsheep.jacketapp.experimental.MultiTransitionActivity;
-import com.lithiumsheep.jacketapp.experimental.TransitionActivity;
 import com.lithiumsheep.jacketapp.ui.activities.SettingsActivity;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
-import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.weather_icons_typeface_library.WeatherIcons;
 
@@ -33,14 +29,7 @@ public class DrawerHelper {
                         new PrimaryDrawerItem().withTag(3).withName(R.string.settings)
                                 .withIcon(CommunityMaterial.Icon.cmd_settings).withSelectable(false),
                         new PrimaryDrawerItem().withTag(4).withName(R.string.about)
-                                .withIcon(CommunityMaterial.Icon.cmd_help_circle).withSelectable(false),
-                        new DividerDrawerItem(),
-                        new SecondaryDrawerItem().withTag(5).withName(R.string.test_animation)
-                                .withIcon(CommunityMaterial.Icon.cmd_test_tube).withSelectable(false),
-                        new SecondaryDrawerItem().withTag(6).withName(R.string.test_transition)
-                                .withIcon(CommunityMaterial.Icon.cmd_android_debug_bridge).withSelectable(false),
-                        new SecondaryDrawerItem().withTag(7).withName(R.string.test_bottom_sheet)
-                                .withIcon(CommunityMaterial.Icon.cmd_android_debug_bridge).withSelectable(false)
+                                .withIcon(CommunityMaterial.Icon.cmd_help_circle).withSelectable(false)
                 )
                 .withSelectedItem(0)
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
@@ -60,15 +49,6 @@ public class DrawerHelper {
                                 activity.startActivity(new Intent(activity, SettingsActivity.class));
                                 return false;
                             case 4:
-                                return false;
-                            case 5:
-                                activity.startActivity(new Intent(activity, TransitionActivity.class));
-                                return false;
-                            case 6:
-                                activity.startActivity(new Intent(activity, MultiTransitionActivity.class));
-                                return false;
-                            case 7:
-                                activity.startActivity(new Intent(activity, BottomSheetActivity.class));
                                 return false;
                             default:
                                 return false;

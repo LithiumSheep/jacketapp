@@ -32,13 +32,6 @@
             android:name=".ui.activities.SettingsActivity"
             android:label="@string/preferences" />
 
-        <activity android:name=".experimental.TransitionActivity" />
-        <activity android:name=".experimental.TransitionBActivity" />
-
-        <activity android:name=".experimental.MultiTransitionActivity" />
-        <activity android:name=".experimental.MultiTransitionEndActivity" />
-        <activity android:name=".experimental.BottomSheetActivity" />
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyC1Y6YT5rXcTD1QeLEG0m8UFt4_3B1LaEQ"/>
