@@ -17,16 +17,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".ui.activities.MainActivity">
+        <activity
+            android:name=".ui.activities.SplashActivity"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".ui.activities.SplashActivity"
-            android:theme="@style/AppTheme.TransparentStatus" />
+        <activity android:name=".ui.activities.MainActivity" />
 
         <activity
             android:name=".ui.activities.SettingsActivity"
@@ -34,7 +34,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyC1Y6YT5rXcTD1QeLEG0m8UFt4_3B1LaEQ"/>
+            android:value="AIzaSyC1Y6YT5rXcTD1QeLEG0m8UFt4_3B1LaEQ" />
 
     </application>
 
