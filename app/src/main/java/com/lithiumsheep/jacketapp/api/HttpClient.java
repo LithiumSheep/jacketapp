@@ -24,8 +24,8 @@ public class HttpClient {
                     .connectTimeout(10, TimeUnit.SECONDS)
                     .writeTimeout(10, TimeUnit.SECONDS)
                     .readTimeout(30, TimeUnit.SECONDS)
-                    .addInterceptor(basicLogger())
                     .addInterceptor(new CredentialInterceptor())
+                    .addInterceptor(basicLogger())
                     .build();
         }
         return client;
