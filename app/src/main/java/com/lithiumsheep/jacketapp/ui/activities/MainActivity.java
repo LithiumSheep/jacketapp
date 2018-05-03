@@ -70,13 +70,13 @@ public class MainActivity extends AppCompatActivity {
     TextView jacketText;
 
     // view and model
-    private Drawer drawer;
-    private WeatherViewModel weatherViewModel;
-    private LocationViewModel locationViewModel;
+    Drawer drawer;
+    WeatherViewModel weatherViewModel;
+    LocationViewModel locationViewModel;
 
     // autocomplete
-    private GeoDataClient client;
-    private AutocompleteFilter defaultFilter;
+    GeoDataClient client;
+    AutocompleteFilter defaultFilter;
 
     // debug
     boolean disableAutocomplete = false;
@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void getWeatherByLocation() {
+    void getWeatherByLocation() {
         if (!PermissionUtil.hasLocationPermission(this)) {
             Timber.d("Requesting location permissions...");
             PermissionUtil.requestLocationPermission(this, LEET_LOCATION_REQUEST_CODE);
@@ -194,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void updateUi(CurrentWeather weather) {
+    void updateUi(CurrentWeather weather) {
         weatherTime.setText(TimeUtil.getTimeForNow());
         weatherLocation.setText(weather.getName());
         tempHigh.setText("High " + Converter.tempForDisplay(weather.getTemperature().getTempMax()));
@@ -225,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
         if (drawer.isDrawerOpen()) {
             drawer.closeDrawer();
         } else {
-            super.onBackPressed();
+            moveTaskToBack(true);
         }
     }
 }
