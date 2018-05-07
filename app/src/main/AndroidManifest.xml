@@ -26,6 +26,10 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".ui.activities.LaunchActivity"
+            android:theme="@style/AppTheme.TransparentStatus" />
+
         <activity android:name=".ui.activities.MainActivity" />
 
         <activity

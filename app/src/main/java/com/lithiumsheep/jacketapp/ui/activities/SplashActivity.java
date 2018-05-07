@@ -12,6 +12,6 @@ public class SplashActivity extends AppCompatActivity {
         // theme set through SplashTheme in AndroidManifest
 
         // just forward to MainActivity
-        startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, LaunchActivity.class));
     }
 }
