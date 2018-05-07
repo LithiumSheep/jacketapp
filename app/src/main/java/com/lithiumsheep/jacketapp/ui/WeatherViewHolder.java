@@ -37,4 +37,13 @@ public class WeatherViewHolder {
         maxTemp.setText(String.valueOf(weather.getMetrics().getTempMax()));
         name.setText(weather.getWeather().get(0).getMain());
     }
+
+    public void clear() {
+        time.setText(null);
+        location.setText(null);
+        mainTemp.setText(null);
+        minTemp.setText(null);
+        maxTemp.setText(null);
+        name.setText(null);
+    }
 }

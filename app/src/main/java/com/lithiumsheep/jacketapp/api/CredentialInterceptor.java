@@ -2,6 +2,8 @@ package com.lithiumsheep.jacketapp.api;
 
 import android.support.annotation.NonNull;
 
+import com.lithiumsheep.jacketapp.util.UserAgent;
+
 import java.io.IOException;
 
 import okhttp3.HttpUrl;
@@ -14,13 +16,21 @@ public class CredentialInterceptor implements Interceptor {
     @Override
     public Response intercept(@NonNull Chain chain) throws IOException {
 
-        HttpUrl url = chain.request().url()
-                .newBuilder()
-                .addQueryParameter("appId", "2f3e06e1d1a7d3ac7eb733be32aef344")
-                .addQueryParameter("units", "imperial")
-                .build();
+        Request request = chain.request();
+        HttpUrl url = request.url();
 
-        Request request = chain.request().newBuilder().url(url).build();
+        if (request.url().host().contains("https://api.openweathermap.org")) {
+            // only apply credentials if using api.openweathermap directly
+            url = chain.request().url()
+                    .newBuilder()
+                    .addQueryParameter("appId", "2f3e06e1d1a7d3ac7eb733be32aef344")
+                    .addQueryParameter("units", "imperial")
+                    .build();
+        }
+
+        request = request.newBuilder().url(url)
+                .addHeader("User-Agent", UserAgent.getDefault())
+                .build();
 
         return chain.proceed(request);
     }

@@ -32,7 +32,9 @@ public class TestActivity extends AppCompatActivity {
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                HttpClient.get().weatherByCity("Arlington")
+                weatherViewHolder.clear();
+
+                HttpClient.get().getWeather("Arlington")
                         .enqueue(new NetworkCallback<CurrentWeather>() {
                             @Override
                             protected void onSuccess(CurrentWeather response) {

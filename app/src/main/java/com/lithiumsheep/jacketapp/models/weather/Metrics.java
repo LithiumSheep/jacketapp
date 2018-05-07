@@ -10,7 +10,7 @@ public class Metrics {
     @Json(name = "temp_max")
     private float tempMax;
 
-    private int pressure;
+    private float pressure;
     private int humidity;
 
     public float getTemp() {
