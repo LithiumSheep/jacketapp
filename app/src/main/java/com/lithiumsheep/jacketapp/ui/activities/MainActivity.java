@@ -24,6 +24,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.lithiumsheep.jacketapp.R;
+import com.lithiumsheep.jacketapp.models.LocationCache;
 import com.lithiumsheep.jacketapp.models.search.PlaceSuggestion;
 import com.lithiumsheep.jacketapp.util.Converter;
 import com.lithiumsheep.jacketapp.util.DrawerHelper;
@@ -86,6 +87,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        LocationCache cache = new LocationCache(this);
+        Location lastLocation = cache.load();
+
+        if (lastLocation != null) {
+            Timber.d("Lat %s", lastLocation.getLatitude());
+            Timber.d("Lon %s", lastLocation.getLongitude());
+
+        }
 
         drawer = DrawerHelper.attach(this);
         searchView.attachNavigationDrawerToMenuButton(drawer.getDrawerLayout());

@@ -1,7 +1,6 @@
 package com.lithiumsheep.jacketapp.ui.activities;
 
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -19,6 +18,7 @@ import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.lithiumsheep.jacketapp.R;
+import com.lithiumsheep.jacketapp.models.LocationCache;
 import com.lithiumsheep.jacketapp.util.PermissionUtil;
 import com.lithiumsheep.jacketapp.viewmodel.LocationViewModel;
 import com.squareup.picasso.Picasso;
@@ -38,6 +38,7 @@ public class LaunchActivity extends AppCompatActivity {
     ImageView backdrop;
 
     LocationViewModel locationViewModel;
+    LocationCache locationCache;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,6 +49,11 @@ public class LaunchActivity extends AppCompatActivity {
         Picasso.get()
                 .load(BACKDROP_URL_DARKER_RAIN)
                 .into(backdrop);
+
+        locationCache = new LocationCache(this);
+        if (locationCache.load() != null) {
+            cacheLocationAndProceed(locationCache.load());
+        } // else proceed
 
         locationViewModel = ViewModelProviders.of(this).get(LocationViewModel.class);
         locationViewModel.getlastKnownLocation(this).observe(this, new Observer<Location>() {
@@ -96,6 +102,9 @@ public class LaunchActivity extends AppCompatActivity {
         // cache it
         Timber.d("Lat %s", location.getLatitude());
         Timber.d("Lon %s", location.getLongitude());
+
+        new LocationCache(this).save(location);
+        startActivity(new Intent(this, MainActivity.class));
     }
 
     @Override
