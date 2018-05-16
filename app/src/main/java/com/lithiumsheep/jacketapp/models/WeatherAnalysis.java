@@ -1,6 +1,7 @@
 package com.lithiumsheep.jacketapp.models;
 
-import io.lithiumsheep.weatherlib.models.CurrentWeather;
+
+import com.lithiumsheep.jacketapp.models.weather.CurrentWeather;
 
 public class WeatherAnalysis {
 
@@ -106,7 +107,7 @@ public class WeatherAnalysis {
         }
 
         public static float calcCompositeScore(CurrentWeather weather) {
-            return calcTemp(weather.getTemperature().getTemp()) +
+            return calcTemp(weather.getMetrics().getTemp()) +
                     calcWind(weather.getWind().getSpeed()) +
                     calcWeather(weather.getWeather().get(0).getId()) +
                     calcClouds(weather.getClouds().getAll());

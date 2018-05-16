@@ -14,6 +14,8 @@ import timber.log.Timber;
 
 public class WeatherViewModel extends ViewModel {
 
+    // TODO: Swap with module:app impl of network service, remove references to WeatherLib
+
     private String lastQuery;
 
     private MutableLiveData<CurrentWeather> data;

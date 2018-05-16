@@ -21,6 +21,11 @@ import com.lithiumsheep.jacketapp.viewmodel.LocationViewModel;
 
 import timber.log.Timber;
 
+/**
+ * Abstract Location activity that returns a location through {@link #onLocationFetched(Location)}
+ *
+ * Location can be sourced from {@link #getLastLocation()} or {@link #displayPlacesAutocomplete()}
+ */
 public abstract class LocationActivity extends AppCompatActivity {
 
     private static final int LOCATION_REQUEST_CODE = 1337;
@@ -47,10 +52,6 @@ public abstract class LocationActivity extends AppCompatActivity {
         } else {
             PermissionUtil.requestLocationPermission(this, LOCATION_REQUEST_CODE);
         }
-    }
-
-    public void setLocationObserver(Observer<Location> observer) {
-        locationViewModel.getlastKnownLocation(this).observe(this, observer);
     }
 
     public void displayPlacesAutocomplete() {

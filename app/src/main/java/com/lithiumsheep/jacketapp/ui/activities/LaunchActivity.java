@@ -19,6 +19,7 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.lithiumsheep.jacketapp.R;
 import com.lithiumsheep.jacketapp.models.LocationCache;
+import com.lithiumsheep.jacketapp.ui.LocationActivity;
 import com.lithiumsheep.jacketapp.util.PermissionUtil;
 import com.lithiumsheep.jacketapp.viewmodel.LocationViewModel;
 import com.squareup.picasso.Picasso;
@@ -28,7 +29,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import timber.log.Timber;
 
-public class LaunchActivity extends AppCompatActivity {
+public class LaunchActivity extends LocationActivity {
 
     static final String BACKDROP_URL_RAIN = "https://images.pexels.com/photos/243971/pexels-photo-243971.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260";
     static final String BACKDROP_URL_DARKER_RAIN = "https://images.pexels.com/photos/110874/pexels-photo-110874.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260";
@@ -37,7 +38,6 @@ public class LaunchActivity extends AppCompatActivity {
     @BindView(R.id.backdrop)
     ImageView backdrop;
 
-    LocationViewModel locationViewModel;
     LocationCache locationCache;
 
     @Override
@@ -55,39 +55,21 @@ public class LaunchActivity extends AppCompatActivity {
             cacheLocationAndProceed(locationCache.load());
         } // else proceed
 
-        locationViewModel = ViewModelProviders.of(this).get(LocationViewModel.class);
-        locationViewModel.getlastKnownLocation(this).observe(this, new Observer<Location>() {
-            @Override
-            public void onChanged(@Nullable Location location) {
-                updateUi(location);
-            }
-        });
     }
 
     @OnClick(R.id.location_button)
     void onUseCurrentLocationClicked() {
-        if (!PermissionUtil.hasLocationPermission(this)) {
-            PermissionUtil.requestLocationPermission(this, 1337);
-        } else {
-            locationViewModel.fetchLocation();
-        }
+        getLastLocation();
     }
 
     @OnClick(R.id.search_button)
     void onSearchManuallyClicked() {
-        //startActivity(new Intent(this, MainActivity.class));
-        AutocompleteFilter filter = new AutocompleteFilter.Builder()
-                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
-                .setCountry("USA")
-                .build();
-        try {
-            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
-                    .setFilter(filter)
-                    .build(this);
-            startActivityForResult(intent, 7331);
-        } catch (GooglePlayServicesNotAvailableException | GooglePlayServicesRepairableException e) {
-            Timber.e(e);
-        }
+        displayPlacesAutocomplete();
+    }
+
+    @Override
+    public void onLocationFetched(Location location) {
+        updateUi(location);
     }
 
     void updateUi(Location location) {
@@ -110,43 +92,5 @@ public class LaunchActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         moveTaskToBack(true);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 1337) {
-            if (grantResults.length <= 0) {
-                Timber.w("Location request was interrupted (by user?)");
-            } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // granted
-                locationViewModel.fetchLocation();
-            } else {
-                Timber.d("Location requested denied by user");
-            }
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 7331) {
-            if (resultCode == RESULT_OK) {
-                Place place = PlaceAutocomplete.getPlace(this, data);
-                Timber.i("Place: %s", place.getName());
-                Timber.i("Place: %s", place.getAddress());
-
-                Location location = new Location("GooglePlacesAutocomplete");
-                location.setLatitude(place.getLatLng().latitude);
-                location.setLongitude(place.getLatLng().longitude);
-
-                updateUi(location);
-
-            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-                Status status = PlaceAutocomplete.getStatus(this, data);
-                Timber.w(status.getStatusMessage());
-            } else if (resultCode == RESULT_CANCELED) {
-                // The user canceled the operation.
-            }
-        }
     }
 }
