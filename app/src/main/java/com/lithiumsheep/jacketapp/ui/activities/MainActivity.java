@@ -26,6 +26,7 @@ import com.google.android.gms.tasks.Task;
 import com.lithiumsheep.jacketapp.R;
 import com.lithiumsheep.jacketapp.models.LocationCache;
 import com.lithiumsheep.jacketapp.models.search.PlaceSuggestion;
+import com.lithiumsheep.jacketapp.models.weather.CurrentWeather;
 import com.lithiumsheep.jacketapp.util.Converter;
 import com.lithiumsheep.jacketapp.util.DrawerHelper;
 import com.lithiumsheep.jacketapp.util.PermissionUtil;
@@ -36,7 +37,6 @@ import com.mikepenz.materialdrawer.Drawer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.lithiumsheep.weatherlib.models.CurrentWeather;
 import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
@@ -90,11 +90,9 @@ public class MainActivity extends AppCompatActivity {
 
         LocationCache cache = new LocationCache(this);
         Location lastLocation = cache.load();
-
         if (lastLocation != null) {
             Timber.d("Lat %s", lastLocation.getLatitude());
             Timber.d("Lon %s", lastLocation.getLongitude());
-
         }
 
         drawer = DrawerHelper.attach(this);
@@ -105,7 +103,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable Location location) {
                 if (location != null) {
-                    weatherViewModel.fetchWeather(location);
+                    //weatherViewModel.fetchWeather(location);
+                    Timber.w("Location not supported yet");
                 } else {
                     Timber.w("Observed ViewModel location is null");
                 }
@@ -125,33 +124,29 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        weatherViewModel.getLoadingState()
+                .observe(this, new Observer<Boolean>() {
+                    @Override
+                    public void onChanged(@Nullable Boolean aBoolean) {
+                        // refreshlayout setRefreshing
+                    }
+                });
+
         // menu clicked
         searchView.setOnMenuItemClickListener(new FloatingSearchView.OnMenuItemClickListener() {
             @Override
             public void onActionMenuItemSelected(MenuItem item) {
                 if (item.getItemId() == R.id.action_search) {
                     // check if last location exists on disk, if yes ask to continue
-                    weatherViewModel.fetchWeather(searchView.getQuery());
+                    weatherViewModel.getWeather(searchView.getQuery());
                 } else if (item.getItemId() == R.id.action_location) {
                     getWeatherByLocation();
                 }
             }
         });
 
-        // keyboard search tapped
-        searchView.setOnSearchListener(new FloatingSearchView.OnSearchListener() {
-            @Override
-            public void onSuggestionClicked(SearchSuggestion searchSuggestion) {
-                Timber.d("Search suggestion clicked %s", searchSuggestion.getBody());
-            }
 
-            @Override
-            public void onSearchAction(String currentQuery) {
-                weatherViewModel.fetchWeather(currentQuery);
-            }
-        });
-
-        client = Places.getGeoDataClient(this, null);
+        client = Places.getGeoDataClient(this);
         defaultFilter = new AutocompleteFilter.Builder()
                 .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
                 .setCountry("USA")
@@ -192,6 +187,22 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        // keyboard search tapped
+        searchView.setOnSearchListener(new FloatingSearchView.OnSearchListener() {
+            @Override
+            public void onSuggestionClicked(SearchSuggestion searchSuggestion) {
+                Timber.d("Search suggestion clicked %s", searchSuggestion.getBody());
+                searchView.clearSearchFocus();
+                searchView.setSearchText(searchSuggestion.getBody());
+                weatherViewModel.getWeather(searchSuggestion.getBody());
+            }
+
+            @Override
+            public void onSearchAction(String currentQuery) {
+                weatherViewModel.getWeather(currentQuery);
+            }
+        });
     }
 
     void getWeatherByLocation() {
@@ -207,9 +218,9 @@ public class MainActivity extends AppCompatActivity {
     void updateUi(CurrentWeather weather) {
         weatherTime.setText(TimeUtil.getTimeForNow());
         weatherLocation.setText(weather.getName());
-        tempHigh.setText("High " + Converter.tempForDisplay(weather.getTemperature().getTempMax()));
-        tempLow.setText(("Low " + Converter.tempForDisplay(weather.getTemperature().getTempMin())));
-        tempMain.setText(Converter.tempForDisplay(weather.getTemperature().getTemp()));
+        tempHigh.setText("High " + Converter.tempForDisplay(weather.getMetrics().getTempMax()));
+        tempLow.setText(("Low " + Converter.tempForDisplay(weather.getMetrics().getTempMin())));
+        tempMain.setText(Converter.tempForDisplay(weather.getMetrics().getTemp()));
         weatherText.setText(weather.getWeather().get(0).getDescription());
 
         // jacketText.setText("It's cold, put a Jacket on!");

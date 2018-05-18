@@ -24,4 +24,8 @@
         <item name="android:windowBackground">@drawable/background_splash</item>
     </style>
 
+    <style name="AppTheme.Light" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorAccent">@color/md_green_500</item>
+    </style>
+
 </resources>

@@ -75,12 +75,4 @@ public class PlaceSuggestion implements SearchSuggestion {
         }
         return list;
     }
-
-    public static List<PlaceSuggestion> mock() {
-        List<PlaceSuggestion> list = new ArrayList<>();
-        list.add(new PlaceSuggestion("Blah"));
-        list.add(new PlaceSuggestion("Bork"));
-        list.add(new PlaceSuggestion("Snerk"));
-        return list;
-    }
 }

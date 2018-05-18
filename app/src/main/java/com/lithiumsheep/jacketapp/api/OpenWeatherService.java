@@ -11,15 +11,6 @@ public interface OpenWeatherService {
     //String URL = "https://api.openweathermap.org";
     String URL = "https://us-central1-jacketapp-1513807035703.cloudfunctions.net/";
 
-    @GET("data/2.5/weather")
-    Call<CurrentWeather> weatherByCity(@Query("q") String city);
-
-    @GET("data/2.5/weather")
-    Call<CurrentWeather> weatherByZip(@Query("zip") String zip);
-
-    @GET("data/2.5/weather")
-    Call<CurrentWeather> weatherByLatLon(@Query("lat") Double lat, @Query("lon") Double lon);
-
     @GET("weather")
     Call<CurrentWeather> getWeather(@Query("lat") Double lat, @Query("lon") Double lon);
 
@@ -27,5 +18,5 @@ public interface OpenWeatherService {
     Call<CurrentWeather> getWeather(@Query("city") String city);
 
     @GET("weather")
-    Call<CurrentWeather> getWeather(@Query("zipcode") CharSequence zip);
+    Call<CurrentWeather> getWeatherByZip(@Query("zipcode") String zip);
 }
