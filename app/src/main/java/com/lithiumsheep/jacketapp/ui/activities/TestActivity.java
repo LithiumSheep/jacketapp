@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.ImageView;
 
 import com.lithiumsheep.jacketapp.R;
 import com.lithiumsheep.jacketapp.api.HttpClient;
@@ -17,6 +18,8 @@ import timber.log.Timber;
 
 public class TestActivity extends AppCompatActivity {
 
+    @BindView(R.id.backdrop)
+    ImageView backdrop;
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout refreshLayout;
 

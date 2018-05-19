@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,14 +44,6 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.floating_search_view)
     FloatingSearchView searchView;
-    @BindView(R.id.view_group)
-    ViewGroup viewGroup;
-
-    // using activity_main_alternate
-    /*@BindView(R.id.text)
-    TextView weatherText;
-    @BindView(R.id.main_progress)
-    ProgressBar progressBar;*/
 
     // using activity_main
     @BindView(R.id.weather_time)
@@ -216,6 +207,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void updateUi(CurrentWeather weather) {
+        Timber.d(weather.getName());
         weatherTime.setText(TimeUtil.getTimeForNow());
         weatherLocation.setText(weather.getName());
         tempHigh.setText("High " + Converter.tempForDisplay(weather.getMetrics().getTempMax()));
