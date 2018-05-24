@@ -6,6 +6,10 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
+import com.lapism.searchview.Search;
+import com.lapism.searchview.widget.SearchAdapter;
+import com.lapism.searchview.widget.SearchItem;
+import com.lapism.searchview.widget.SearchView;
 import com.lithiumsheep.jacketapp.R;
 import com.lithiumsheep.jacketapp.api.HttpClient;
 import com.lithiumsheep.jacketapp.api.NetworkCallback;
@@ -22,6 +26,8 @@ public class TestActivity extends AppCompatActivity {
     ImageView backdrop;
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout refreshLayout;
+    @BindView(R.id.search_view)
+    SearchView searchView;
 
     WeatherViewHolder weatherViewHolder;
 
@@ -31,6 +37,10 @@ public class TestActivity extends AppCompatActivity {
         setContentView(R.layout.activity_test);
         ButterKnife.bind(this);
         weatherViewHolder = new WeatherViewHolder(this);
+
+        SearchAdapter adapter = new SearchAdapter(this);
+
+        SearchItem item = new SearchItem(this);
 
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -51,6 +61,18 @@ public class TestActivity extends AppCompatActivity {
                                 refreshLayout.setRefreshing(false);
                             }
                         });
+            }
+        });
+
+        searchView.setOnQueryTextListener(new Search.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(CharSequence query) {
+                return false;
+            }
+
+            @Override
+            public void onQueryTextChange(CharSequence newText) {
+                
             }
         });
     }

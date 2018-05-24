@@ -42,9 +42,9 @@ dependencies {
     implementation 'com.google.android.gms:play-services-places:15.0.1'
 
     // support libs
-    implementation 'com.android.support:appcompat-v7:27.1.0'
-    implementation 'com.android.support:design:27.1.0'
-    implementation 'com.android.support:cardview-v7:27.1.0'
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
+    implementation 'com.android.support:cardview-v7:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
 
     // android arch
@@ -65,7 +65,7 @@ dependencies {
     implementation 'com.jakewharton.timber:timber:4.7.0'
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-    implementation 'com.jakewharton.threetenabp:threetenabp:1.0.5'
+    implementation 'com.jakewharton.threetenabp:threetenabp:1.1.0'
 
     // custom views
     // implementation 'com.github.AhmadNemati:WindView:1.1.1'
@@ -73,6 +73,7 @@ dependencies {
     // https://github.com/lapism/SearchView
     implementation 'com.github.arimorty:floatingsearchview:2.1.1'
     implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.lapism:searchview:27.1.1.0.0'
 
     // material/mikepenz
     implementation('com.mikepenz:materialdrawer:5.9.5@aar') { transitive = true }
