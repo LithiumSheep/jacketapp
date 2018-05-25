@@ -5,6 +5,7 @@ import android.widget.TextView;
 
 import com.lithiumsheep.jacketapp.R;
 import com.lithiumsheep.jacketapp.models.weather.CurrentWeather;
+import com.lithiumsheep.jacketapp.util.Converter;
 import com.lithiumsheep.jacketapp.util.TimeUtil;
 
 import butterknife.BindView;
@@ -32,7 +33,7 @@ public class WeatherViewHolder {
     public void bind(CurrentWeather weather) {
         time.setText(TimeUtil.getTimeForNow());
         location.setText(weather.getName());
-        mainTemp.setText(String.valueOf(weather.getMetrics().getTemp()));
+        mainTemp.setText(Converter.tempForDisplay(weather.getMetrics().getTemp()));
         minTemp.setText(String.valueOf(weather.getMetrics().getTempMin()));
         maxTemp.setText(String.valueOf(weather.getMetrics().getTempMax()));
         name.setText(weather.getWeather().get(0).getMain());

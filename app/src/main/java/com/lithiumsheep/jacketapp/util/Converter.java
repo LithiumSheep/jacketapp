@@ -5,6 +5,19 @@ public class Converter {
     private static final float RATIO = (9f / 5f);
     private static final String DEGREE_SYMBOL = "\u00B0";
 
+    public static final int KELVIN = -1;
+    public static final int CELCIUS = 0;
+    public static final int FAHRENHEIT = 1;
+
+    public static float convert(float kelvin, int flag) {
+        if (flag == CELCIUS) {
+            return kelvinToCelcius(kelvin);
+        } else if (flag == FAHRENHEIT) {
+            return toCelcius(kelvin);
+        }
+        return kelvin;
+    }
+
     private static float kelvinToCelcius(float kelvin) {
         return kelvin - 273.15f;
     }

@@ -7,6 +7,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -42,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.floating_search_view)
     FloatingSearchView searchView;
+
+    @BindView(R.id.swipe_refresh)
+    SwipeRefreshLayout swipeRefreshLayout;
 
     // view and model
     Drawer drawer;
@@ -110,7 +114,9 @@ public class MainActivity extends AppCompatActivity {
             public void onActionMenuItemSelected(MenuItem item) {
                 if (item.getItemId() == R.id.action_search) {
                     // check if last location exists on disk, if yes ask to continue
-                    weatherViewModel.getWeather(searchView.getQuery());
+                    if (!searchView.getQuery().isEmpty()) {
+                        weatherViewModel.getWeather(searchView.getQuery());
+                    }
                 } else if (item.getItemId() == R.id.action_location) {
                     getWeatherByLocation();
                 }
@@ -164,20 +170,35 @@ public class MainActivity extends AppCompatActivity {
         searchView.setOnSearchListener(new FloatingSearchView.OnSearchListener() {
             @Override
             public void onSuggestionClicked(SearchSuggestion searchSuggestion) {
-                Timber.d("Search suggestion clicked %s", searchSuggestion.getBody());
-                searchView.clearSearchFocus();
-                searchView.setSearchText(searchSuggestion.getBody());
-                weatherViewModel.getWeather(searchSuggestion.getBody());
+                if (!searchSuggestion.getBody().isEmpty()) {
+                    Timber.d("Search suggestion clicked %s", searchSuggestion.getBody());
+                    searchView.clearSearchFocus();
+                    searchView.setSearchText(searchSuggestion.getBody());
+                    weatherViewModel.getWeather(searchSuggestion.getBody());
+                }
             }
 
             @Override
             public void onSearchAction(String currentQuery) {
-                weatherViewModel.getWeather(currentQuery);
+                if (! currentQuery.isEmpty()) {
+                    weatherViewModel.getWeather(currentQuery);
+                }
+            }
+        });
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // implement refresh on last location
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
     }
 
     void updateUi(CurrentWeather weather) {
+        searchView.setSearchText(null);
+        searchView.setSearchHint(weather.getName());
+
         Timber.d(weather.toString());
         WeatherViewHolder holder = new WeatherViewHolder(this);
         holder.bind(weather);
