@@ -10,6 +10,7 @@ public class LocationCache {
 
     private static final String LAT = "lat";
     private static final String LON = "lon";
+    private static final String NAME = "name";
 
     private final SharedPreferences prefs;
 
@@ -20,15 +21,17 @@ public class LocationCache {
     }
 
     public Location load() {
-        String lat = prefs.getString(LAT, null);
-        String lon = prefs.getString(LON, null);
-        if (lat != null && lon != null) {
-            lastLocation = new Location(LOCATION_CACHE);
-            lastLocation.setLatitude(Double.valueOf(lat));
-            lastLocation.setLongitude(Double.valueOf(lon));
+        if (lastLocation == null) {
+            String lat = prefs.getString(LAT, null);
+            String lon = prefs.getString(LON, null);
+            if (lat != null && lon != null) {
+                lastLocation = new Location(LOCATION_CACHE);
+                lastLocation.setLatitude(Double.valueOf(lat));
+                lastLocation.setLongitude(Double.valueOf(lon));
+            }
+            // could be null still
         }
         return lastLocation;
-
     }
 
     public void save(Location location) {

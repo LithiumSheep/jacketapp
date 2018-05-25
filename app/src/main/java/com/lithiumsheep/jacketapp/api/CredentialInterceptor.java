@@ -11,6 +11,10 @@ import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/**
+ * @deprecated Use Firebase cloud function backend (BaseURL declared in {@link OpenWeatherService}
+ */
+@Deprecated
 public class CredentialInterceptor implements Interceptor {
 
     @Override

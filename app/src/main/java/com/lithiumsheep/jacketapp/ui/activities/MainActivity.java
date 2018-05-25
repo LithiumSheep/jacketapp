@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
@@ -26,10 +25,8 @@ import com.lithiumsheep.jacketapp.R;
 import com.lithiumsheep.jacketapp.models.LocationCache;
 import com.lithiumsheep.jacketapp.models.search.PlaceSuggestion;
 import com.lithiumsheep.jacketapp.models.weather.CurrentWeather;
-import com.lithiumsheep.jacketapp.util.Converter;
 import com.lithiumsheep.jacketapp.util.DrawerHelper;
 import com.lithiumsheep.jacketapp.util.PermissionUtil;
-import com.lithiumsheep.jacketapp.util.TimeUtil;
 import com.lithiumsheep.jacketapp.viewmodel.LocationViewModel;
 import com.lithiumsheep.jacketapp.viewmodel.WeatherViewModel;
 import com.mikepenz.materialdrawer.Drawer;
@@ -44,22 +41,6 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.floating_search_view)
     FloatingSearchView searchView;
-
-    // using activity_main
-    @BindView(R.id.weather_time)
-    TextView weatherTime;
-    @BindView(R.id.weather_location)
-    TextView weatherLocation;
-    @BindView(R.id.temperature_high)
-    TextView tempHigh;
-    @BindView(R.id.temperature_low)
-    TextView tempLow;
-    @BindView(R.id.temperature_main)
-    TextView tempMain;
-    @BindView(R.id.weather_text)
-    TextView weatherText;
-    @BindView(R.id.jacket_text)
-    TextView jacketText;
 
     // view and model
     Drawer drawer;
@@ -107,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable CurrentWeather currentWeather) {
                 if (currentWeather != null) {
-                    updateUi(currentWeather);
+                    //updateUi(currentWeather);
                 } else {
                     Toast.makeText(MainActivity.this, "There was a problem fetching your result", Toast.LENGTH_SHORT).show();
                     Timber.w("currentWeather came back null");
@@ -204,18 +185,6 @@ public class MainActivity extends AppCompatActivity {
             //getLastKnownLocation();
             locationViewModel.fetchLocation();
         }
-    }
-
-    void updateUi(CurrentWeather weather) {
-        Timber.d(weather.getName());
-        weatherTime.setText(TimeUtil.getTimeForNow());
-        weatherLocation.setText(weather.getName());
-        tempHigh.setText("High " + Converter.tempForDisplay(weather.getMetrics().getTempMax()));
-        tempLow.setText(("Low " + Converter.tempForDisplay(weather.getMetrics().getTempMin())));
-        tempMain.setText(Converter.tempForDisplay(weather.getMetrics().getTemp()));
-        weatherText.setText(weather.getWeather().get(0).getDescription());
-
-        // jacketText.setText("It's cold, put a Jacket on!");
     }
 
     @Override

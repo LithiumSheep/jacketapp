@@ -27,7 +27,6 @@ public class HttpClient {
                     .writeTimeout(10, TimeUnit.SECONDS)
                     .readTimeout(30, TimeUnit.SECONDS)
                     .cache(new Cache(JacketApplication.getDefaultCacheDir(), JacketApplication.getDefaultCacheSize()))
-                    .addInterceptor(new CredentialInterceptor())
                     .addInterceptor(basicLogger())
                     .build();
         }
