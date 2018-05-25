@@ -1,9 +1,11 @@
 package com.lithiumsheep.jacketapp.api;
 
 import com.lithiumsheep.jacketapp.BuildConfig;
+import com.lithiumsheep.jacketapp.JacketApplication;
 
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -24,6 +26,7 @@ public class HttpClient {
                     .connectTimeout(10, TimeUnit.SECONDS)
                     .writeTimeout(10, TimeUnit.SECONDS)
                     .readTimeout(30, TimeUnit.SECONDS)
+                    .cache(new Cache(JacketApplication.getDefaultCacheDir(), JacketApplication.getDefaultCacheSize()))
                     .addInterceptor(new CredentialInterceptor())
                     .addInterceptor(basicLogger())
                     .build();
