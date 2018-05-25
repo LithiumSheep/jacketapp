@@ -7,4 +7,11 @@ public class Clouds {
     public int getAll() {
         return all;
     }
+
+    @Override
+    public String toString() {
+        return "Clouds{" +
+                "all=" + all +
+                '}';
+    }
 }

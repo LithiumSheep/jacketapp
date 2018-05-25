@@ -12,4 +12,12 @@ public class Coord {
     public double getLat() {
         return lat;
     }
+
+    @Override
+    public String toString() {
+        return "Coord{" +
+                "lon=" + lon +
+                ", lat=" + lat +
+                '}';
+    }
 }

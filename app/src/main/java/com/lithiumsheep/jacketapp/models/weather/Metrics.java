@@ -24,4 +24,15 @@ public class Metrics {
     public float getTempMax() {
         return tempMax;
     }
+
+    @Override
+    public String toString() {
+        return "Metrics{" +
+                "temp=" + temp +
+                ", tempMin=" + tempMin +
+                ", tempMax=" + tempMax +
+                ", pressure=" + pressure +
+                ", humidity=" + humidity +
+                '}';
+    }
 }

@@ -41,4 +41,18 @@ public class CurrentWeather {
     public String getName() {
         return name;
     }
+
+    @Override
+    public String toString() {
+        return "CurrentWeather{" +
+                "coord=" + coord +
+                ", weather=" + weather +
+                ", main=" + main +
+                ", wind=" + wind +
+                ", clouds=" + clouds +
+                ", id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", dt='" + dt + '\'' +
+                '}';
+    }
 }

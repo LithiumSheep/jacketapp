@@ -12,4 +12,12 @@ public class Wind {
     public float getDegrees() {
         return deg;
     }
+
+    @Override
+    public String toString() {
+        return "Wind{" +
+                "speed=" + speed +
+                ", deg=" + deg +
+                '}';
+    }
 }

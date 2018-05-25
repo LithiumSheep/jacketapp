@@ -25,6 +25,7 @@ import com.lithiumsheep.jacketapp.R;
 import com.lithiumsheep.jacketapp.models.LocationCache;
 import com.lithiumsheep.jacketapp.models.search.PlaceSuggestion;
 import com.lithiumsheep.jacketapp.models.weather.CurrentWeather;
+import com.lithiumsheep.jacketapp.ui.WeatherViewHolder;
 import com.lithiumsheep.jacketapp.util.DrawerHelper;
 import com.lithiumsheep.jacketapp.util.PermissionUtil;
 import com.lithiumsheep.jacketapp.viewmodel.LocationViewModel;
@@ -88,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable CurrentWeather currentWeather) {
                 if (currentWeather != null) {
-                    //updateUi(currentWeather);
+                    updateUi(currentWeather);
                 } else {
                     Toast.makeText(MainActivity.this, "There was a problem fetching your result", Toast.LENGTH_SHORT).show();
                     Timber.w("currentWeather came back null");
@@ -174,6 +175,12 @@ public class MainActivity extends AppCompatActivity {
                 weatherViewModel.getWeather(currentQuery);
             }
         });
+    }
+
+    void updateUi(CurrentWeather weather) {
+        Timber.d(weather.toString());
+        WeatherViewHolder holder = new WeatherViewHolder(this);
+        holder.bind(weather);
     }
 
     void getWeatherByLocation() {
