@@ -3,6 +3,8 @@ package com.lithiumsheep.jacketapp.viewmodel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.location.Location;
+import android.support.annotation.NonNull;
 
 import com.lithiumsheep.jacketapp.api.HttpClient;
 import com.lithiumsheep.jacketapp.api.NetworkCallback;
@@ -42,6 +44,25 @@ public class WeatherViewModel extends ViewModel {
                         if (!query.equals(lastQuery)) {
                             return;
                         }
+                        loading.setValue(false);
+                        data.setValue(response);
+                    }
+
+                    @Override
+                    protected void onError(Error error) {
+                        loading.setValue(false);
+                    }
+                });
+    }
+
+    public void getWeather(@NonNull Location location) {
+        loading.setValue(true);
+
+        HttpClient.get()
+                .getWeather(location.getLatitude(), location.getLongitude())
+                .enqueue(new NetworkCallback<CurrentWeather>() {
+                    @Override
+                    protected void onSuccess(CurrentWeather response) {
                         loading.setValue(false);
                         data.setValue(response);
                     }

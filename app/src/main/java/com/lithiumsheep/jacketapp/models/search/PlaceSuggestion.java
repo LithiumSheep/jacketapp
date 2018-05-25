@@ -12,11 +12,11 @@ import java.util.List;
 
 public class PlaceSuggestion implements SearchSuggestion {
 
-    public PlaceSuggestion(String prediction) {
+    private PlaceSuggestion(String prediction) {
         this.prediction = prediction;
     }
 
-    public PlaceSuggestion(Parcel in) {
+    private PlaceSuggestion(Parcel in) {
         this.prediction = in.readString();
     }
 

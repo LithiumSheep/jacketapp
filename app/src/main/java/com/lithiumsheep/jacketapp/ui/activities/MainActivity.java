@@ -75,8 +75,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable Location location) {
                 if (location != null) {
-                    //weatherViewModel.fetchWeather(location);
-                    Timber.w("Location not supported yet");
+                    Timber.d("Last Known Location is %s", location.toString());
+                    weatherViewModel.getWeather(location);
                 } else {
                     Timber.w("Observed ViewModel location is null");
                 }
@@ -96,13 +96,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        weatherViewModel.getLoadingState()
-                .observe(this, new Observer<Boolean>() {
-                    @Override
-                    public void onChanged(@Nullable Boolean aBoolean) {
-                        // refreshlayout setRefreshing
-                    }
-                });
+        weatherViewModel.getLoadingState().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(@Nullable Boolean aBoolean) {
+                // refreshlayout setRefreshing
+            }
+        });
 
         // menu clicked
         searchView.setOnMenuItemClickListener(new FloatingSearchView.OnMenuItemClickListener() {
