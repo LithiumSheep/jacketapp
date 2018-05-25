@@ -6,7 +6,6 @@ import android.view.View;
 
 import com.lithiumsheep.jacketapp.R;
 import com.lithiumsheep.jacketapp.ui.activities.SettingsActivity;
-import com.lithiumsheep.jacketapp.ui.activities.TestActivity;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
@@ -44,7 +43,6 @@ public class DrawerHelper {
                                 // prefs
                                 return false;
                             case 2:
-                                activity.startActivity(new Intent(activity, TestActivity.class));
                                 return false;
                             case 3:
                                 // settings
