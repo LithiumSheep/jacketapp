@@ -1,1 +1,1 @@
-include ':app', ':weatherwrapper', ':weatherlib'
+include ':app'
