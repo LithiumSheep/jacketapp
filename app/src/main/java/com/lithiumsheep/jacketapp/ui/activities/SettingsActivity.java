@@ -15,11 +15,11 @@ public class SettingsActivity extends PreferenceActivity {
 
         getFragmentManager()
                 .beginTransaction()
-                .replace(android.R.id.content, new JacketPreferenceFragment())
+                .replace(android.R.id.content, new SettingsPreferenceFragment())
                 .commit();
     }
 
-    public static class JacketPreferenceFragment extends PreferenceFragment {
+    public static class SettingsPreferenceFragment extends PreferenceFragment {
 
         @Override
         public void onCreate(final Bundle savedInstanceState) {

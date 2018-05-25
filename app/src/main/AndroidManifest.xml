@@ -35,6 +35,7 @@
         <activity
             android:name=".ui.activities.SettingsActivity"
             android:label="@string/preferences" />
+        <activity android:name=".ui.activities.JacketPreferencesActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

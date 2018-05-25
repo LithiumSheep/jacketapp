@@ -59,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
     // debug
     boolean disableAutocomplete = false;
 
+    WeatherViewHolder holder;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
             Timber.d("Lat %s", lastLocation.getLatitude());
             Timber.d("Lon %s", lastLocation.getLongitude());
         }
+
+        holder = new WeatherViewHolder(this);
 
         drawer = DrawerHelper.attach(this);
         searchView.attachNavigationDrawerToMenuButton(drawer.getDrawerLayout());
@@ -103,8 +107,13 @@ public class MainActivity extends AppCompatActivity {
 
         weatherViewModel.getLoadingState().observe(this, new Observer<Boolean>() {
             @Override
-            public void onChanged(@Nullable Boolean aBoolean) {
-                // refreshlayout setRefreshing
+            public void onChanged(@Nullable Boolean loading) {
+                if (loading != null) {
+                    swipeRefreshLayout.setRefreshing(loading);
+                    if (loading) {
+                        holder.clear();
+                    }
+                }
             }
         });
 
@@ -196,11 +205,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void updateUi(CurrentWeather weather) {
-        searchView.setSearchText(null);
-        searchView.setSearchHint(weather.getName());
+        searchView.setSearchText(weather.getName());
 
         Timber.d(weather.toString());
-        WeatherViewHolder holder = new WeatherViewHolder(this);
         holder.bind(weather);
     }
 
