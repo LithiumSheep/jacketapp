@@ -29,13 +29,12 @@
         <activity
             android:name=".ui.activities.LaunchActivity"
             android:theme="@style/AppTheme.TransparentStatus" />
-
         <activity android:name=".ui.activities.MainActivity" />
-
+        <activity android:name=".ui.activities.JacketPreferencesActivity" />
         <activity
             android:name=".ui.activities.SettingsActivity"
             android:label="@string/preferences" />
-        <activity android:name=".ui.activities.JacketPreferencesActivity" />
+        <activity android:name=".ui.activities.AboutActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

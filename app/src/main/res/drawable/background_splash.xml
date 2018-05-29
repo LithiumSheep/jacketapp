@@ -6,7 +6,7 @@
     <item>
         <bitmap
             android:gravity="center"
-            android:src="@drawable/low_quality_jacket"/>
+            android:src="@drawable/jacket_blue_outline"/>
     </item>
 
 </layer-list>
