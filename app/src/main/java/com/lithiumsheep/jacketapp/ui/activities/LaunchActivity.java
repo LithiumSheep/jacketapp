@@ -1,27 +1,15 @@
 package com.lithiumsheep.jacketapp.ui.activities;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.places.AutocompleteFilter;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.lithiumsheep.jacketapp.R;
-import com.lithiumsheep.jacketapp.models.LocationCache;
+import com.lithiumsheep.jacketapp.models.LastLocation;
+import com.lithiumsheep.jacketapp.models.LastLocationCache;
 import com.lithiumsheep.jacketapp.ui.LocationActivity;
-import com.lithiumsheep.jacketapp.util.PermissionUtil;
-import com.lithiumsheep.jacketapp.viewmodel.LocationViewModel;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
@@ -38,7 +26,7 @@ public class LaunchActivity extends LocationActivity {
     @BindView(R.id.backdrop)
     ImageView backdrop;
 
-    LocationCache locationCache;
+    LastLocationCache lastLocationCache;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,10 +38,12 @@ public class LaunchActivity extends LocationActivity {
                 .load(BACKDROP_URL_DARKER_RAIN)
                 .into(backdrop);
 
-        locationCache = new LocationCache(this);
-        if (locationCache.load() != null) {
-            cacheLocationAndProceed(locationCache.load());
-        } // else proceed
+        lastLocationCache = new LastLocationCache(this);
+        if (lastLocationCache.load() != null) {
+            proceedToMainActivity(false, null);
+        } else {
+
+        }
 
     }
 
@@ -76,16 +66,26 @@ public class LaunchActivity extends LocationActivity {
         if (location == null) {
             // provide reasons it could be null
         } else {
-            cacheLocationAndProceed(location);
+            proceedToMainActivity(true, location);
         }
     }
 
-    void cacheLocationAndProceed(Location location) {
+
+    /**
+     * Some weird shit going on here.  This whole screen needs to be redone as MainActivity gains most of the caching location fetching behavior
+     * Weirdness starts in {@link #onCreate(Bundle)} above, where the lastLocationCache is checked)}
+     */
+    @Deprecated
+    void proceedToMainActivity(boolean shouldCacheLocation, @Nullable Location location) {
         // cache it
         Timber.d("Lat %s", location.getLatitude());
         Timber.d("Lon %s", location.getLongitude());
 
-        new LocationCache(this).save(location);
+        if (shouldCacheLocation) {
+            LastLocation loc = new LastLocation("", location);
+            lastLocationCache.save(loc);
+        }
+
         startActivity(new Intent(this, MainActivity.class));
     }
 

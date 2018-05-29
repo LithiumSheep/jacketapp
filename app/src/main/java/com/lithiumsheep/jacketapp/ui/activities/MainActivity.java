@@ -23,7 +23,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.lithiumsheep.jacketapp.R;
-import com.lithiumsheep.jacketapp.models.LocationCache;
+import com.lithiumsheep.jacketapp.models.LastLocation;
+import com.lithiumsheep.jacketapp.models.LastLocationCache;
 import com.lithiumsheep.jacketapp.models.search.PlaceSuggestion;
 import com.lithiumsheep.jacketapp.models.weather.CurrentWeather;
 import com.lithiumsheep.jacketapp.ui.WeatherViewHolder;
@@ -61,18 +62,13 @@ public class MainActivity extends AppCompatActivity {
 
     WeatherViewHolder holder;
 
+    LastLocationCache cache;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
-        LocationCache cache = new LocationCache(this);
-        Location lastLocation = cache.load();
-        if (lastLocation != null) {
-            Timber.d("Lat %s", lastLocation.getLatitude());
-            Timber.d("Lon %s", lastLocation.getLongitude());
-        }
 
         holder = new WeatherViewHolder(this);
 
@@ -97,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable CurrentWeather currentWeather) {
                 if (currentWeather != null) {
+
                     updateUi(currentWeather);
                 } else {
                     Toast.makeText(MainActivity.this, "There was a problem fetching your result", Toast.LENGTH_SHORT).show();
@@ -202,6 +199,15 @@ public class MainActivity extends AppCompatActivity {
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
+
+        cache = new LastLocationCache(this);
+        if (cache.load() != null) {
+            LastLocation lastLocation = cache.load();
+
+            Timber.d(lastLocation.toString());
+            searchView.setSearchText(lastLocation.getName());
+            weatherViewModel.getWeather(lastLocation.getLocation());
+        }
     }
 
     void updateUi(CurrentWeather weather) {
@@ -209,6 +215,8 @@ public class MainActivity extends AppCompatActivity {
 
         Timber.d(weather.toString());
         holder.bind(weather);
+
+        cache.save(weather.getName(), weather.getCoord());
     }
 
     void getWeatherByLocation() {
