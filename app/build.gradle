@@ -16,12 +16,16 @@ android {
             debuggable true
             applicationIdSuffix '.debug'
             versionNameSuffix ' DEBUG'
+            buildConfigField 'String', "BACKEND_URL", JacketApp_BackendUrl
+            resValue 'string', "geo_api_key", JacketApp_GeoApiKey
         }
         release {
             crunchPngs true
             minifyEnabled false
             //TODO: Bring in proguard rules
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField 'String', "BACKEND_URL", JacketApp_BackendUrl
+            resValue 'string', "geo_api_key", JacketApp_GeoApiKey
         }
     }
 }
