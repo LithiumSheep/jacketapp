@@ -77,11 +77,13 @@ public class LaunchActivity extends LocationActivity {
      */
     @Deprecated
     void proceedToMainActivity(boolean shouldCacheLocation, @Nullable Location location) {
-        // cache it
-        Timber.d("Lat %s", location.getLatitude());
-        Timber.d("Lon %s", location.getLongitude());
 
+        // cache it
         if (shouldCacheLocation) {
+
+            Timber.d("Lat %s", location.getLatitude());
+            Timber.d("Lon %s", location.getLongitude());
+
             LastLocation loc = new LastLocation("", location);
             lastLocationCache.save(loc);
         }

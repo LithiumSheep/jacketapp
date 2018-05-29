@@ -11,5 +11,10 @@ public class AboutActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
+
+        // TODO: Provide attributions for free icons
+        // https://www.flaticon.com/free-icon/jacket_705707
+        // https://www.flaticon.com/packs/weather-set-4
+        // https://www.flaticon.com/packs/weather-18
     }
 }
