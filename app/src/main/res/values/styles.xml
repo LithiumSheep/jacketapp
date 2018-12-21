@@ -25,7 +25,7 @@
     </style>
 
     <style name="AppTheme.Light" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorAccent">@color/md_green_500</item>
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
     <style name="TextAppearance.JacketApp.Caption" parent="TextAppearance.AppCompat.Caption">
