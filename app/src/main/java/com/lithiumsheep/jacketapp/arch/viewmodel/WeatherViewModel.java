@@ -1,4 +1,4 @@
-package com.lithiumsheep.jacketapp.viewmodel;
+package com.lithiumsheep.jacketapp.arch.viewmodel;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;

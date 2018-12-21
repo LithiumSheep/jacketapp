@@ -1,4 +1,4 @@
-package com.lithiumsheep.jacketapp.viewmodel;
+package com.lithiumsheep.jacketapp.arch.viewmodel;
 
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.Lifecycle;

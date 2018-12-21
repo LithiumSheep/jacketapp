@@ -17,7 +17,7 @@ import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.lithiumsheep.jacketapp.util.PermissionUtil;
-import com.lithiumsheep.jacketapp.viewmodel.LocationViewModel;
+import com.lithiumsheep.jacketapp.arch.viewmodel.LocationViewModel;
 
 import timber.log.Timber;
 
@@ -26,7 +26,7 @@ import timber.log.Timber;
  *
  * Location can be sourced from {@link #getLastLocation()} or {@link #displayPlacesAutocomplete()}
  */
-public abstract class LocationActivity extends AppCompatActivity {
+public abstract class AbsLocationActivity extends AppCompatActivity {
 
     private static final int LOCATION_REQUEST_CODE = 1337;
     private static final int AUTOCOMPLETE_REQUEST_CODE = 7331;

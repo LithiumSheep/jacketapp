@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import com.lithiumsheep.jacketapp.R;
 import com.lithiumsheep.jacketapp.models.LastLocation;
 import com.lithiumsheep.jacketapp.models.LastLocationCache;
-import com.lithiumsheep.jacketapp.ui.LocationActivity;
+import com.lithiumsheep.jacketapp.ui.AbsLocationActivity;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
@@ -17,7 +17,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import timber.log.Timber;
 
-public class LaunchActivity extends LocationActivity {
+public class LaunchActivity extends AbsLocationActivity {
 
     static final String BACKDROP_URL_RAIN = "https://images.pexels.com/photos/243971/pexels-photo-243971.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260";
     static final String BACKDROP_URL_DARKER_RAIN = "https://images.pexels.com/photos/110874/pexels-photo-110874.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260";

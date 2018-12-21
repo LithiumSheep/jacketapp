@@ -30,8 +30,8 @@ import com.lithiumsheep.jacketapp.models.weather.CurrentWeather;
 import com.lithiumsheep.jacketapp.ui.WeatherViewHolder;
 import com.lithiumsheep.jacketapp.util.DrawerHelper;
 import com.lithiumsheep.jacketapp.util.PermissionUtil;
-import com.lithiumsheep.jacketapp.viewmodel.LocationViewModel;
-import com.lithiumsheep.jacketapp.viewmodel.WeatherViewModel;
+import com.lithiumsheep.jacketapp.arch.viewmodel.LocationViewModel;
+import com.lithiumsheep.jacketapp.arch.viewmodel.WeatherViewModel;
 import com.mikepenz.materialdrawer.Drawer;
 
 import butterknife.BindView;
