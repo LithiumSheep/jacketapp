@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import javax.inject.Named;
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
@@ -12,6 +13,7 @@ import dagger.Provides;
 @Module
 class PersistenceModule {
 
+    @Singleton
     @Provides
     @Named("Default")
     SharedPreferences provideDefaultSharedPreferences(Application application) {
