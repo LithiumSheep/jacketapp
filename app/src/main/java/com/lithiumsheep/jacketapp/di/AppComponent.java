@@ -14,7 +14,8 @@ import dagger.android.support.AndroidSupportInjectionModule;
         ApplicationContextModule.class,
         ActivityModule.class,
         PersistenceModule.class,
-        NetworkModule.class
+        NetworkModule.class,
+        ArchComponentsModule.class
 })
 public interface AppComponent extends AndroidInjector<JacketApplication> {
     @Component.Builder

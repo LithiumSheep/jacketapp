@@ -6,70 +6,58 @@ import android.arch.lifecycle.ViewModel;
 import android.location.Location;
 import android.support.annotation.NonNull;
 
-import com.lithiumsheep.jacketapp.api.HttpClient;
 import com.lithiumsheep.jacketapp.api.NetworkCallback;
+import com.lithiumsheep.jacketapp.api.OpenWeatherService;
+import com.lithiumsheep.jacketapp.arch.Resource;
 import com.lithiumsheep.jacketapp.models.weather.CurrentWeather;
 
 public class WeatherViewModel extends ViewModel {
 
-    private String lastQuery;
+    private OpenWeatherService service;
 
-    private MutableLiveData<CurrentWeather> data;
-    private MutableLiveData<Boolean> loading;
+    private MutableLiveData<Resource<CurrentWeather>> currentWeather;
 
-    public LiveData<CurrentWeather> getData() {
-        if (data == null) {
-            data = new MutableLiveData<>();
-        }
-        return data;
+    WeatherViewModel(OpenWeatherService service) {
+        this.service = service;
     }
 
-    public LiveData<Boolean> getLoadingState() {
-        if (loading == null) {
-            loading = new MutableLiveData<>();
+    public LiveData<Resource<CurrentWeather>> getWeather() {
+        if (currentWeather == null) {
+            currentWeather = new MutableLiveData<>();
         }
-        return loading;
+        return currentWeather;
     }
 
-    public void getWeather(final String query) {
-        lastQuery = query;
+    public void fetchWeather(final String query) {
+        currentWeather.setValue(Resource.<CurrentWeather>loading());
 
-        loading.setValue(true);
-
-        HttpClient.get()
-                .getWeather(query)
+        service.getWeather(query)
                 .enqueue(new NetworkCallback<CurrentWeather>() {
                     @Override
                     protected void onSuccess(CurrentWeather response) {
-                        if (!query.equals(lastQuery)) {
-                            return;
-                        }
-                        loading.setValue(false);
-                        data.setValue(response);
+                        currentWeather.setValue(Resource.success(response));
                     }
 
                     @Override
-                    protected void onError(Error error) {
-                        loading.setValue(false);
+                    protected void onError(Throwable error) {
+                        currentWeather.setValue(Resource.<CurrentWeather>error(error));
                     }
                 });
     }
 
-    public void getWeather(@NonNull Location location) {
-        loading.setValue(true);
+    public void fetchWeather(@NonNull Location location) {
+        currentWeather.setValue(Resource.<CurrentWeather>loading());
 
-        HttpClient.get()
-                .getWeather(location.getLatitude(), location.getLongitude())
+        service.getWeather(location.getLatitude(), location.getLongitude())
                 .enqueue(new NetworkCallback<CurrentWeather>() {
                     @Override
                     protected void onSuccess(CurrentWeather response) {
-                        loading.setValue(false);
-                        data.setValue(response);
+                        currentWeather.setValue(Resource.success(response));
                     }
 
                     @Override
-                    protected void onError(Error error) {
-                        loading.setValue(false);
+                    protected void onError(Throwable error) {
+                        currentWeather.setValue(Resource.<CurrentWeather>error(error));
                     }
                 });
     }

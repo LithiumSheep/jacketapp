@@ -23,6 +23,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.lithiumsheep.jacketapp.R;
+import com.lithiumsheep.jacketapp.arch.Resource;
+import com.lithiumsheep.jacketapp.arch.viewmodel.AppViewModelFactory;
 import com.lithiumsheep.jacketapp.models.LastLocation;
 import com.lithiumsheep.jacketapp.models.LastLocationCache;
 import com.lithiumsheep.jacketapp.models.search.PlaceSuggestion;
@@ -34,8 +36,11 @@ import com.lithiumsheep.jacketapp.arch.viewmodel.LocationViewModel;
 import com.lithiumsheep.jacketapp.arch.viewmodel.WeatherViewModel;
 import com.mikepenz.materialdrawer.Drawer;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import dagger.android.AndroidInjection;
 import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
@@ -47,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout swipeRefreshLayout;
+
+    @Inject
+    AppViewModelFactory viewModelFactory;
 
     // view and model
     Drawer drawer;
@@ -66,49 +74,49 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        holder = new WeatherViewHolder(this);
-
         drawer = DrawerHelper.attach(this);
         searchView.attachNavigationDrawerToMenuButton(drawer.getDrawerLayout());
 
-        locationViewModel = ViewModelProviders.of(this).get(LocationViewModel.class);
+        holder = new WeatherViewHolder(this);
+
+        locationViewModel = ViewModelProviders
+                .of(this)
+                .get(LocationViewModel.class);
+
+        weatherViewModel = ViewModelProviders
+                .of(this, viewModelFactory)
+                .get(WeatherViewModel.class);
+
         locationViewModel.getlastKnownLocation(this).observe(this, new Observer<Location>() {
             @Override
             public void onChanged(@Nullable Location location) {
                 if (location != null) {
                     Timber.d("Last Known Location is %s", location.toString());
-                    weatherViewModel.getWeather(location);
+                    weatherViewModel.fetchWeather(location);
                 } else {
                     Timber.w("Observed ViewModel location is null");
                 }
             }
         });
 
-        weatherViewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
-        weatherViewModel.getData().observe(this, new Observer<CurrentWeather>() {
-            @Override
-            public void onChanged(@Nullable CurrentWeather currentWeather) {
-                if (currentWeather != null) {
 
-                    updateUi(currentWeather);
-                } else {
-                    Toast.makeText(MainActivity.this, "There was a problem fetching your result", Toast.LENGTH_SHORT).show();
-                    Timber.w("currentWeather came back null");
-                }
-            }
-        });
-
-        weatherViewModel.getLoadingState().observe(this, new Observer<Boolean>() {
+        weatherViewModel.getWeather().observe(this, new Observer<Resource<CurrentWeather>>() {
             @Override
-            public void onChanged(@Nullable Boolean loading) {
-                if (loading != null) {
-                    swipeRefreshLayout.setRefreshing(loading);
-                    if (loading) {
+            public void onChanged(@Nullable Resource<CurrentWeather> weather) {
+                if (weather != null) {
+                    swipeRefreshLayout.setRefreshing(weather.isLoading());
+                    if (weather.isLoading()) {
                         holder.clear();
+                    }
+                    if (weather.isSuccessful()) {
+                        updateUi(weather.getData());
+                    } else {
+                        Toast.makeText(MainActivity.this, weather.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -121,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
                 if (item.getItemId() == R.id.action_search) {
                     // check if last location exists on disk, if yes ask to continue
                     if (!searchView.getQuery().isEmpty()) {
-                        weatherViewModel.getWeather(searchView.getQuery());
+                        weatherViewModel.fetchWeather(searchView.getQuery());
                     }
                 } else if (item.getItemId() == R.id.action_location) {
                     getWeatherByLocation();
@@ -180,14 +188,14 @@ public class MainActivity extends AppCompatActivity {
                     Timber.d("Search suggestion clicked %s", searchSuggestion.getBody());
                     searchView.clearSearchFocus();
                     searchView.setSearchText(searchSuggestion.getBody());
-                    weatherViewModel.getWeather(searchSuggestion.getBody());
+                    weatherViewModel.fetchWeather(searchSuggestion.getBody());
                 }
             }
 
             @Override
             public void onSearchAction(String currentQuery) {
                 if (! currentQuery.isEmpty()) {
-                    weatherViewModel.getWeather(currentQuery);
+                    weatherViewModel.fetchWeather(currentQuery);
                 }
             }
         });
@@ -195,8 +203,10 @@ public class MainActivity extends AppCompatActivity {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                // implement refresh on last location
+                Toast.makeText(MainActivity.this, "SwipeRefresh is a no-op", Toast.LENGTH_SHORT).show();
+                Timber.d("SwipeRefresh is a no-op");
                 swipeRefreshLayout.setRefreshing(false);
+
             }
         });
 
@@ -206,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
 
             Timber.d(lastLocation.toString());
             searchView.setSearchText(lastLocation.getName());
-            weatherViewModel.getWeather(lastLocation.getLocation());
+            weatherViewModel.fetchWeather(lastLocation.getLocation());
         }
     }
 
